@@ -56,27 +56,49 @@
 
 using System.Threading.Channels;
 
-Console.Write("Iveskite figuros pavadinima (kvadratas, staciakampis, apskritimas): ");
-string input = Console.ReadLine();
+Console.WriteLine("""
+     Pasirinkite figura (1 - 3):
+     1: kvadratas
+     2: staciakampis 
+     3: apskritimas
+     """);
+Console.WriteLine();
+int input = Convert.ToByte(Console.ReadLine());
+bool repeat = true;
+
 
 switch (input)
 {
-    case "kvadratas":
+while (repeat)
+        case 1:
         Console.Write("Iveskite krastines ilgi: ");
         int i = Convert.ToByte(Console.ReadLine());
-        Console.WriteLine($"Figuros plotis yra: {Math.Pow(i, 2)}");
+        Console.WriteLine($"Kvadrato plotis yra: {Math.Pow(i, 2)}");
+        repeat = false;
         break;
-    case "staciakampis":
+    case 2:
         Console.Write("Iveskite pirmos krastines ilgi: ");
         i = Convert.ToByte(Console.ReadLine());
         Console.Write("Iveskite antros krastines ilgi: ");
         int p = Convert.ToByte(Console.ReadLine());
-        Console.WriteLine($"Figuros plotis yra: {i * p}");
+        Console.WriteLine($"Staciakampio plotis yra: {i * p}");
+        repeat = false;
         break;
-    case "apskritimas":
+    case 3:
         Console.Write("Iveskite apskritimo radiusa: ");
         int radius = Convert.ToByte(Console.ReadLine());
-        Console.WriteLine($"Figuros plotis yra: {Math.PI * Math.Pow(radius, 2)}");
+        Console.WriteLine($"Apskritimo plotis yra: {Math.PI * Math.Pow(radius, 2)}");
+        repeat = false;
         break;
-}
+        {
+
+        }
+    default:
+        Console.Write("Incorrect input value! Please input 1 - 3:");
+        break;
+    }
+
+
+
+
 
