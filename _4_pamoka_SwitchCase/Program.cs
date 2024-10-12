@@ -56,49 +56,76 @@
 
 using System.Threading.Channels;
 
-Console.WriteLine("""
+bool repeat = true;
+
+while (repeat)
+{
+    Console.WriteLine("""
      Pasirinkite figura (1 - 3):
      1: kvadratas
      2: staciakampis 
      3: apskritimas
      """);
-Console.WriteLine();
-int input = Convert.ToByte(Console.ReadLine());
-bool repeat = true;
-
-
-switch (input)
-{
-while (repeat)
-        case 1:
-        Console.Write("Iveskite krastines ilgi: ");
-        int i = Convert.ToByte(Console.ReadLine());
-        Console.WriteLine($"Kvadrato plotis yra: {Math.Pow(i, 2)}");
-        repeat = false;
-        break;
-    case 2:
-        Console.Write("Iveskite pirmos krastines ilgi: ");
-        i = Convert.ToByte(Console.ReadLine());
-        Console.Write("Iveskite antros krastines ilgi: ");
-        int p = Convert.ToByte(Console.ReadLine());
-        Console.WriteLine($"Staciakampio plotis yra: {i * p}");
-        repeat = false;
-        break;
-    case 3:
-        Console.Write("Iveskite apskritimo radiusa: ");
-        int radius = Convert.ToByte(Console.ReadLine());
-        Console.WriteLine($"Apskritimo plotis yra: {Math.PI * Math.Pow(radius, 2)}");
-        repeat = false;
-        break;
+    Console.WriteLine();
+    if (byte.TryParse(Console.ReadLine(), out byte input))
+    {
+        switch (input)
         {
+            case 1:
+                Console.Write("Iveskite krastines ilgi: ");
+                if (byte.TryParse(Console.ReadLine(), out byte side))
+                {
+                    Console.WriteLine($"Kvadrato plotis yra: {Math.Pow(side, 2)}");
+                    repeat = false;
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect input value!");
+                }
+                break;
+            case 2:
+                Console.Write("Iveskite pirmos krastines ilgi: ");
+                if (byte.TryParse(Console.ReadLine(), out byte side1))
+                {
+                    Console.Write("Iveskite antros krastines ilgi: ");
+                    if (byte.TryParse(Console.ReadLine(), out byte side2))
+                    {
+                        Console.WriteLine($"Staciakampio plotis yra: {side1 * side2}");
+                        repeat = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Incorrect input value!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect input value!");
+                }
 
+                break;
+            case 3:
+                Console.Write("Iveskite apskritimo radiusa: ");
+                if (int.TryParse(Console.ReadLine(), out int radius))
+                {
+                    Console.WriteLine($"Apskritimo plotis yra: {Math.PI * Math.Pow(radius, 2):F2}");
+                    repeat = false;
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect input value!");
+                    Console.WriteLine("Incorrect input value!");
+                }
+                break;
+            default:
+                Console.WriteLine("Incorrect input value!");
+                break;
         }
-    default:
-        Console.Write("Incorrect input value! Please input 1 - 3:");
-        break;
     }
-
-
-
+    else
+    {
+        Console.WriteLine("Incorrect input value!");
+    }
+}
 
 
