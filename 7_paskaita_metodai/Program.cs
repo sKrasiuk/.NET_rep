@@ -22,14 +22,14 @@ namespace _7_paskaita_metodai
             Console.WriteLine(FactorialCalc(5));
         }
 
-        //private static void PrintMenu()
-        //{
-        //    Console.WriteLine("1. Spausdinti prekes");
-        //    Console.WriteLine("2. Ziureti krepseli");
-        //    Console.WriteLine("3. Isvalyti krepseli");
-        //    Console.WriteLine("4. Pirkti");
-        //    Console.WriteLine("5. Isjungti programa");
-        //}
+        private static void PrintMenu()
+        {
+            Console.WriteLine("1. Spausdinti prekes");
+            Console.WriteLine("2. Ziureti krepseli");
+            Console.WriteLine("3. Isvalyti krepseli");
+            Console.WriteLine("4. Pirkti");
+            Console.WriteLine("5. Isjungti programa");
+        }
 
         //private static int GetUserSelection()
         //{
@@ -122,6 +122,10 @@ namespace _7_paskaita_metodai
 
         private static int FactorialCalc(int number)
         {
+            if (number == 0)
+            {
+                return 0;
+            }
             if (number == 1)
             {
                 return 1;
