@@ -1,13 +1,15 @@
 ﻿public static class Methods
 {
+    private static readonly Random random = new Random();
     private static int RandomIntGenerator(int to, int from = 1)
     {
-        Random random = new Random();
-        int randomNumber = random.Next(from, to);
+        int randomNumber = random.Next(from, to + 1);
         return randomNumber;
     }
 
-    private static void SceneMood(int value = default)
+
+
+    public static void SceneMood(int value = default)
     {
         switch (value)
         {
@@ -45,6 +47,8 @@
         }
     }
 
+
+
     public static void RoadsCrossing()
     {
         SceneMood(3);
@@ -55,6 +59,8 @@
             """);
         PathChoise();
     }
+
+
 
     public static void PathChoise()
     {
@@ -79,6 +85,8 @@
         //return choise;
     }
 
+
+
     public static int ScenarioChoise()
     {
         string value;
@@ -101,32 +109,36 @@
         return choise;
     }
 
-    public static void EventsRandomiser()
+
+
+    public static int EventsRandomizer()
     {
-        switch (RandomIntGenerator(6))
+        int eventType = (RandomIntGenerator(5));
+        SceneMood(eventType == 5 ? 1 : 6);
+
+        switch (eventType)
         {
             case 1:
-                SceneMood(6);
                 Console.WriteLine("""
                     You’ve found yourself in trouble!
                     A huge minotaur, wielding a massive axe, is staring at you with aggression.
                     You have only a moment to decide your next move!
 
                     """);
-                ScenarioChoise();
-                break;
+                return 1;
+            //ScenarioChoise();
+            //break;
             case 2:
-                SceneMood(6);
                 Console.WriteLine("""
                     You’ve found yourself in a snake’s nest!
                     An aggressively looking snake isn’t happy to see you and is ready to attack.
                     You need to decide your next step quickly!
 
                     """);
-                ScenarioChoise();
-                break;
+                return 2;
+            //ScenarioChoise();
+            //break;
             case 3:
-                SceneMood(6);
                 Console.WriteLine("""
                     Have you been eating mushrooms in this cave? Not the best idea!
                     You spot a unicorn waiting for your next move, and it looks unpredictable.
@@ -134,10 +146,10 @@
                     You have only a moment to decide what to do!
 
                     """);
-                ScenarioChoise();
-                break;
+                return 3;
+            //ScenarioChoise();
+            //break;
             case 4:
-                SceneMood(6);
                 Console.WriteLine("""
                     Looks like there’s no safe place in this dungeon.
                     You got lucky to encounter a massive ant!
@@ -145,10 +157,10 @@
                     You only have a moment to decide your next step!
 
                     """);
-                ScenarioChoise();
-                break;
+                return 4;
+            //ScenarioChoise();
+            //break;
             case 5:
-                SceneMood(1);
                 Console.WriteLine("""
                     Lucky day for you!
                     Crawling and running through this endless labyrinth, you finally discover a peaceful place to rest.
@@ -156,13 +168,55 @@
                     Flowers bloom nearby, and butterflies dance in the air. What a perfect spot to restore and relax!
 
                     """);
-                PathChoise();
-                break;
+                return 5;
+            //PathChoise();
+            //break;
+            default:
+                Console.WriteLine("An unknown event has occurred!");
+                return 0;
         }
     }
+
+
 
     public static void PlayerName(string playerNameInput)
     {
         string playerName = playerNameInput;
+    }
+
+
+
+    static int runCounter = 0;
+    public static void Run()
+    {
+        if (runCounter == 3)
+        {
+            do
+            {
+                SceneMood(5);
+                Console.WriteLine("You have no chance to RUN this time!");
+            } while (ScenarioChoise() != 2);
+
+            runCounter = 0;
+        }
+        else
+        {
+            runCounter++;
+            RoadsCrossing();
+        }
+    }
+
+
+
+    public static void Fight(int playerRoll, int cpuRoll)
+    {
+        if (playerRoll < cpuRoll)
+        {
+
+        }
+        else
+        {
+
+        }
     }
 }
