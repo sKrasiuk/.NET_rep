@@ -1,4 +1,7 @@
-﻿do
+﻿
+Methods.RoadsCrossing();
+
+do
 {
     if (Methods.EventsRandomizer() == 5)
     {
@@ -13,10 +16,19 @@
                 break;
 
             case 2:
+                if (Methods.Fight())
+                {
+                    Methods.WinOrLose();
+                }
+                else
+                {
+                    Methods.WinOrLose();
+                }
+
                 break;
         }
     }
-} while (true);
+} while (Methods.WinOrLose());
 
 
 
