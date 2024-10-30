@@ -342,6 +342,9 @@
 
         do
         {
+            PrintFightInterface();
+            Console.Clear();
+
             playerRoll = RandomIntGenerator(6);
             opponentRoll = RandomIntGenerator(6);
 
@@ -378,9 +381,6 @@
                 Console.WriteLine("It's a draw this round! Both rolled {0}. Press any key to continue...", playerRoll);
                 Console.ReadLine();
             }
-
-            //Console.Clear();
-            PrintFightInterface();
 
         } while (playerHP > 0 && rollWinCounter < 3 && opponentHP > 0 && rollLoseCounter < 5);
 
