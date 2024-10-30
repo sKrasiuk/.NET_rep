@@ -1,34 +1,25 @@
-﻿
-Methods.RoadsCrossing();
+﻿Methods.TheBeginning();
 
 do
 {
-    if (Methods.EventsRandomizer() == 5)
+    Methods.EventsRandomizer();
+    if (Methods.eventRandomizerResult == 5)
     {
-        Methods.PathChoise();
+        Methods.PathChoice();
     }
     else
     {
-        switch (Methods.ScenarioChoise())
+        Methods.ScenarioChoise();
+        switch (Methods.scenarioChoise)
         {
             case 1:
                 Methods.Run();
                 break;
 
             case 2:
-                if (Methods.Fight())
-                {
-                    Methods.WinOrLose();
-                }
-                else
-                {
-                    Methods.WinOrLose();
-                }
-
+                Methods.IsWinOrLose(Methods.Fight());
                 break;
         }
     }
-} while (Methods.WinOrLose());
 
-
-
+} while (!Methods.IsGameOn(Methods.isDefeted) && !Methods.HasEscapedTheDungeon(Methods.hasEscaped));
