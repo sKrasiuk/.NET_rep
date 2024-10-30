@@ -74,6 +74,10 @@
 
             """);
 
+        SceneMood(4);
+        Console.WriteLine("Press any key to continue ...");
+        Console.ReadLine();
+
         PathChoice();
     }
 
@@ -327,7 +331,7 @@
 
             Defeat Conditions:
 
-                * Lose five times in a row.
+                * Lose four times in a row.
                 * You lose all your HP.
 
             Only one will emerge victorious! Good luck!
@@ -345,6 +349,7 @@
             {
                 opponentHP--;
                 rollWinCounter++;
+                rollLoseCounter = 0;
 
                 if (opponentHP <= 0 || rollWinCounter >= 3)
                 {
@@ -356,14 +361,18 @@
             {
                 playerHP--;
                 rollLoseCounter++;
+                rollWinCounter = 0;
 
-                if (playerHP <= 0 || rollLoseCounter >= 5)
+                if (playerHP <= 0 || rollLoseCounter >= 4)
                 {
                     return false;
                 }
             }
             else
             {
+                rollWinCounter = 0;
+                rollLoseCounter = 0;
+
                 Console.Clear();
                 SceneMood(7);
                 Console.WriteLine("It's a draw this round! Both rolled {0}. Press any key to continue...", playerRoll);
