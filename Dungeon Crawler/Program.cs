@@ -1,4 +1,5 @@
-﻿Methods.TheBeginning();
+﻿Methods.PlayerName();
+Methods.TheBeginning();
 
 do
 {
@@ -22,4 +23,4 @@ do
         }
     }
 
-} while (!Methods.IsGameOn(Methods.isDefeted) && !Methods.HasEscapedTheDungeon(Methods.hasEscaped));
+} while (!Methods.IsGameOn(Methods.isDefeated) && !Methods.HasEscapedTheDungeon(Methods.hasEscaped));

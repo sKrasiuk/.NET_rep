@@ -52,24 +52,26 @@
     public static void TheBeginning()
     {
         Console.Clear();
+        SceneMood(4);
+        Console.Write("{0}", playerName);
         SceneMood(3);
+        Console.WriteLine($"""
+            , you stand alone in the heart of a dimly lit dungeon.
+            The damp stone walls seem alive, whispering secrets of long-forgotten tales as shadows flicker in the faint light.
+            The air is thick and musty, and the slow, rhythmic drip of water echoes through the unseen depths.
 
-        Console.WriteLine("""
-            You find yourself deep inside a dimly lit dungeon.
-            Surrounded by the damp stone walls that seem to whisper secrets of long-forgotten tales.
-            The air is musty, and the faint echo of dripping water reverberates through the corridors.
-            Ahead of you lies a crossroads with three paths, each shrouded in mystery and potential danger.
-            
-            To your left, a narrow, winding tunnel snakes deeper into darkness.
-            The faint glow of eerie fungi illuminating the way—perhaps a sign of hidden treasures or lurking threats.
-            
-            Straight ahead, a wider passage beckons with the faint flicker of torchlight.
-            The sounds of distant clanging and murmured voices hint at a gathering of creatures or adventurers, which could either be allies or enemies.
-            
-            To your right, a rough-hewn stairway climbs upward, leading to an area that feels warmer, filled with the sound of rushing water.
-            It could lead to a hidden chamber or an escape route.
-            
-            The dungeon waits for your choice, each path filled with its own possibilities. What will you do?
+            Before you lies a crossroads, with three distinct paths, each shrouded in mystery and potential danger.
+
+            To your left, a narrow, winding tunnel spirals further into darkness. 
+            Faintly glowing fungi cling to the walls, illuminating the path ahead—a silent promise of hidden treasures or lurking threats.
+
+            Straight ahead, a wide passage draws you forward, its walls lined with sputtering torches casting long shadows. 
+            The sound of clanging metal and distant murmurs drifts toward you, hinting at a gathering—whether of allies or foes remains unclear.
+
+            To your right, a rough-hewn stairway climbs upward, leading toward a warmer light and the sound of rushing water.
+            This path could reveal a hidden chamber... or offer a chance to escape the unknown depths below.
+
+            The dungeon holds its breath, awaiting your decision. Which path will you choose?
 
 
             """);
@@ -88,7 +90,7 @@
         Console.Clear();
         SceneMood(3);
 
-        switch (RandomIntGenerator(4))
+        switch (RandomIntGenerator(5))
         {
             case 1:
                 Console.WriteLine("""
@@ -138,6 +140,15 @@
                     Frost laces the walls, and shadows flicker, waiting.
                     Three choices. One fate. Which path will you trust… or regret?
 
+
+                    """);
+                break;
+            case 5:
+                Console.WriteLine("""
+                    You find yourself at the crossroads once more...
+                    Familiar paths stretch out before you, each whispering promises of adventure and danger."
+                    "Choose wisely, for your journey is far from over.
+                    
 
                     """);
                 break;
@@ -253,13 +264,64 @@
                 return eventRandomizerResult = 4;
 
             case 5:
-                Console.WriteLine("""
-                    Lucky day for you!
-                    Crawling and running through this endless labyrinth, you finally discover a peaceful place to rest.
-                    Sunlight filters through a crack in the ceiling, illuminating a small waterfall.
-                    Flowers bloom nearby, and butterflies dance in the air. What a perfect spot to restore and relax!
+                switch (RandomIntGenerator(5))
+                {
+                    case 1:
+                        Console.WriteLine("""
+                            Lady Luck shines upon you today!
+                            After endless wandering, you stumble upon a hidden alcove.
+                            Here, the air is warm and filled with the scent of moss and blooming lilies.
+                            A gentle stream flows over smooth stones, creating a crystal-clear pool at its base.
+                            Small bioluminescent mushrooms line the edge, casting a soft, magical glow.
+                            Fireflies flicker in the air, and a gentle breeze stirs, offering a moment of true calm in this perilous place."
 
-                    """);
+
+                            """);
+                        break;
+                    case 2:
+                        Console.WriteLine("""
+                            At long last, your path leads you to a secluded haven.
+                            Here, the walls widen, revealing a tranquil chamber filled with lush greenery.
+                            Ferns and soft moss carpet the ground, and a cascade of water spills from a stone crevice high above, filling a shallow, glistening pool.
+                            Tiny fish swim lazily beneath the water's surface, and soft light filters through cracks in the stone, casting golden hues across the chamber.
+                            In this hidden sanctuary, you find a rare moment to breathe and recharge."
+
+
+                            """);
+                        break;
+                    case 3:
+                        Console.WriteLine("""
+                            As you press onward, a faint sound of trickling water guides you to a small cavern bathed in ethereal light.
+                            Overhead, jagged rocks part to reveal a shaft of sunlight, illuminating a field of soft, vibrant moss.
+                            Wildflowers in hues of violet and blue thrive here, nestled around a bubbling spring that feeds a small, clear pond.
+                            Dragonflies skim across the water's surface, and a gentle mist fills the air, refreshing your senses as you pause in this unexpected paradise."
+
+
+                            """);
+                        break;
+                    case 4:
+                        Console.WriteLine("""
+                            With luck as your guide, you find yourself at the edge of a serene grotto.
+                            Thick vines hang from the stone walls, and delicate white flowers bloom along the ground, filling the air with a gentle fragrance.
+                            A narrow waterfall flows down from above, creating a soothing sound as it hits the rocks below.
+                            In the center, a clear pool reflects the soft light from glowing crystals embedded in the cavern walls.
+                            The sense of peace here is undeniable—a rare sanctuary amid the darkness."
+
+
+                            """);
+                        break;
+                    case 5:
+                        Console.WriteLine("""
+                            Fortune smiles upon you!
+                            After what feels like an eternity spent crawling through the labyrinth's twisting shadows, you stumble upon a hidden sanctuary.
+                            Sunlight spills through a crack in the ceiling, casting a warm glow over the scene—a gentle waterfall tumbles into a clear pool, filling the air with a soothing murmur.
+                            Around you, wildflowers bloom in vibrant colors, and butterflies drift lazily through the air, weaving between the blossoms.
+                            Here, in this oasis of peace, you’ve found the perfect place to rest, recover, and let your guard down—if only for a moment.
+
+
+                            """);
+                        break;
+                }
                 playerHP = 10;
                 return eventRandomizerResult = 5;
 
@@ -271,9 +333,26 @@
 
 
 
-    public static void PlayerName(string playerNameInput)
+    public static string playerName;
+    public static void PlayerName()
     {
-        string playerName = playerNameInput;
+        Console.Clear();
+        SceneMood(3);
+        Console.WriteLine("""
+            Halt, traveler!
+
+            The shadows shift, and the air grows still as you approach.
+            I see the gleam of resolve in your eyes.
+            But before you cross this threshold and descend into the forgotten depths, one question remains…
+
+            What is your name, hero?
+
+            
+            """);
+
+        SceneMood(4);
+        Console.Write("Input your name: ");
+        playerName = Console.ReadLine().Trim();
     }
 
 
@@ -382,7 +461,7 @@
                 Console.ReadLine();
             }
 
-        } while (playerHP > 0 && rollWinCounter < 3 && opponentHP > 0 && rollLoseCounter < 5);
+        } while (playerHP > 0 && rollWinCounter < 3 && opponentHP > 0 && rollLoseCounter < 4);
 
         return false;
     }
@@ -394,7 +473,7 @@
         Console.Clear();
         SceneMood(5);
         Console.WriteLine($"""
-        Player HP: {playerHP}   Wins in a row: {rollWinCounter}
+        {playerName} HP: {playerHP}   Wins in a row: {rollWinCounter}
         Opponent HP: {opponentHP}   Loses in a row: {rollLoseCounter}
         """);
         Console.WriteLine();
@@ -410,7 +489,7 @@
 
 
 
-    public static bool isDefeted = false;
+    public static bool isDefeated = false;
 
     public static bool IsWinOrLose(bool fightResult)
     {
@@ -430,19 +509,10 @@
             Console.ReadLine();
             Console.Clear();
 
-            if (fightsWonCounter < 10)
+            if (fightsWonCounter < 7)
             {
                 hasEscaped = false;
-
-                SceneMood(3);
-                Console.WriteLine("""
-                You find yourself at the crossroads once more...
-                Familiar paths stretch out before you, each whispering promises of adventure and danger."
-                "Choose wisely, for your journey is far from over.
-
-                """);
-
-                PathChoice();
+                RoadsCrossing();
             }
             else
             {
@@ -450,7 +520,7 @@
             }
 
 
-            return isDefeted = false;
+            return isDefeated = false;
         }
         else
         {
@@ -470,7 +540,7 @@
             Console.WriteLine("Press any key to continue ...");
             Console.ReadLine();
 
-            return isDefeted = true;
+            return isDefeated = true;
         }
     }
 
