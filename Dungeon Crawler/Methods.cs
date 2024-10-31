@@ -372,8 +372,6 @@
             {
                 IsWinOrLose(Fight());
             }
-
-            runCounter = 0;
         }
         else
         {
@@ -394,6 +392,7 @@
 
     public static bool Fight()
     {
+        runCounter = 0;
         opponentHP = 5;
         rollWinCounter = 0;
         rollLoseCounter = 0;
