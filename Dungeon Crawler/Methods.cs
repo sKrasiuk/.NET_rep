@@ -396,6 +396,8 @@
         opponentHP = 5;
         rollWinCounter = 0;
         rollLoseCounter = 0;
+        playerRoll = 0;
+        opponentRoll = 0;
 
         Console.Clear();
         SceneMood(5);
@@ -471,6 +473,8 @@
     {
         Console.Clear();
         SceneMood(5);
+        Console.WriteLine($"Enemies defeated: {fightsWonCounter} / 7");
+        SceneMood(4);
         Console.WriteLine($"""
         {playerName} HP: {playerHP}   Wins in a row: {rollWinCounter}
         Opponent HP: {opponentHP}   Loses in a row: {rollLoseCounter}
