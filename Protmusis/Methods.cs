@@ -13,12 +13,6 @@ namespace Protmusis
     {
         private static readonly Random random = new();
 
-        public static int RandomIntGenerator(int to, int from = 1)
-        {
-            int randomNumber = random.Next(from, to + 1);
-            return randomNumber;
-        }
-
         private static string UserInput(int minStringLength = 1)
         {
             string userInput = "";
@@ -28,9 +22,8 @@ namespace Protmusis
 
                 if (userInput == "exit")
                 {
-                    QuitGame(); // mmm ... but it works .. =)
+                    QuitGame();
                 }
-
             } while (string.IsNullOrEmpty(userInput) || userInput.Length < minStringLength);
 
             return userInput;
@@ -40,6 +33,7 @@ namespace Protmusis
         public static void Login()
         {
             logOut = false;
+            userScore = 0;
             string name, surname;
 
             Console.Clear();
@@ -64,6 +58,8 @@ namespace Protmusis
             surname = char.ToUpper(surname[0]) + surname.Substring(1);
 
             currentUser = $"{name} {surname}";
+
+            //LoggedPlayerMenu(currentUser, 0);
         }
 
         public static bool logOut = false;
@@ -83,9 +79,13 @@ namespace Protmusis
                     playersDB[currentUser] = userScore;
                 }
             }
+            else
+            {
+                playersDB[currentUser] = userScore;
+            }
         }
 
-        private static Dictionary<string, int> playersDB = new Dictionary<string, int>();
+        private static Dictionary<string, int> playersDB = new();
         public static void LoggedPlayerMenu(string key, int value)
         {
             if (!playersDB.ContainsKey(key))
@@ -138,7 +138,9 @@ namespace Protmusis
                 }
                 else if (input == "exit")
                 {
+                    //userChoice = -1;
                     isValid = true;
+                    QuitGame();
                 }
                 else
                 {
@@ -256,7 +258,7 @@ namespace Protmusis
             {"Which U.S. mountain erupted in 1980, causing significant destruction?", "Mount Saint Helens"},
         };
 
-        private static List<Dictionary<string, string>> categories = new List<Dictionary<string, string>>
+        private static List<Dictionary<string, string>> categories = new()
         {
             capitals,
             rivers,
@@ -264,26 +266,33 @@ namespace Protmusis
         };
 
         private static List<string> categoriesNames = new List<string> { "Capitals", "Rivers", "Mountains" };
-
-        private static List<string> questions = new List<string>();
+        public static List<string> questions = new List<string>();
         private static List<string> answers = new List<string>();
 
         public static void StartQuiz()
         {
-            GenerateQuestionaryByCategory(ChooseCategory());
+            int category = ChooseCategory();
+            if (category == 113 || quitGame)
+            {
+                return;
+            }
+
+            GenerateQuestionaryByCategory(category);
             QuestionaryUI();
         }
 
-        private static int ChooseCategory()
+        public static int ChooseCategory()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("Choose 1 to 3, or 'q' to return to main menu, \"exit\" to quit the game\n");
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Choose a category to start the quiz:\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             for (int i = 0; i < categoriesNames.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {categoriesNames[i]}");
+                Console.WriteLine($"{i + 1}: {categoriesNames[i]}");
             }
 
             Console.ResetColor();
@@ -294,6 +303,8 @@ namespace Protmusis
 
         private static void GenerateQuestionaryByCategory(int chosenCategory)
         {
+            questions.Clear();
+            answers.Clear();
             var category = categories[chosenCategory - 1];
 
             foreach (var item in category)
@@ -303,38 +314,70 @@ namespace Protmusis
             }
         }
 
+        private static int indexQA;
         public static void QuestionaryUI()
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            var index = RandomIntGenerator(questions.Count - 1, 0);
-            Console.WriteLine("\n{0}", questions[index]);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\n{0}", answers[index]);
-            Console.ResetColor();
+            int totalQuestions = questions.Count;
+
+            while (questions.Count > 0)
+            {
+                int remainingQuestions = questions.Count;
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"Scores: {userScore} | Remaining Questions: {remainingQuestions}/{totalQuestions}\n");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                indexQA = random.Next(questions.Count);
+                correctAnswer = answers[indexQA];
+                Console.WriteLine("{0}\n", questions[indexQA]);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                List<string> answerOptions = GenerateAnswerOptions(correctAnswer);
+                Console.ResetColor();
+                Console.Write("\nYour answer (choose 1 to 4, or 'q' to return to main menu, \"exit\" to quit the game): ");
+                GetUserChoice(1, 4);
+
+                if (userChoice == 113 || quitGame)
+                {
+                    return;
+                }
+
+                if (answerOptions[userChoice - 1] == correctAnswer)
+                {
+                    userScore += 1;
+                    Console.WriteLine("Correct! Your score is now: {0}", userScore);
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect. The correct answer was: {0}", correctAnswer);
+
+                }
+
+                questions.RemoveAt(indexQA);
+                answers.RemoveAt(indexQA);
+
+                Console.WriteLine("\nPress any key to continue to the next question...");
+                Console.ReadKey();
+            }
+            Console.WriteLine("\nAll questions in this category completed!");
+            GoBackToMainMenu();
         }
 
-        public static void AnswersListUI()
+        public static string correctAnswer;
+        public static List<string> GenerateAnswerOptions(string correctAnswer)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            List<string> answerOptions = answers
+                .Where(answer => answer != correctAnswer)
+                .OrderBy(_ => random.Next())
+                .Take(3)
+                .Append(correctAnswer)
+                .OrderBy(_ => random.Next())
+                .ToList();
 
-            Console.ResetColor();
-            GetUserChoice(1, 4);
-        }
+            for (int i = 0; i < answerOptions.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}: {answerOptions[i]}");
+            }
 
-        public static void QuizUI()
-        {
-
-        }
-
-        public static void QuestionsRandomizer()
-        {
-
-        }
-
-        public static void AnswersListGenerator()
-        {
-
+            return answerOptions;
         }
     }
 }
