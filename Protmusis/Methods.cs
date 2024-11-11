@@ -137,7 +137,7 @@ namespace Protmusis
                 else if (input == "exit")
                 {
                     isValid = true;
-                    QuitGame();
+                    //QuitGame();
                 }
                 else
                 {
