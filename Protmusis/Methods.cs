@@ -58,8 +58,6 @@ namespace Protmusis
             surname = char.ToUpper(surname[0]) + surname.Substring(1);
 
             currentUser = $"{name} {surname}";
-
-            //LoggedPlayerMenu(currentUser, 0);
         }
 
         public static bool logOut = false;
@@ -138,7 +136,6 @@ namespace Protmusis
                 }
                 else if (input == "exit")
                 {
-                    //userChoice = -1;
                     isValid = true;
                     QuitGame();
                 }
@@ -242,17 +239,17 @@ namespace Protmusis
         private static Dictionary<string, string> mountains = new()
         {
             {"What is the highest mountain in the world?", "Mount Everest"},
-            {"In which country is Mount Kilimanjaro located?", "Tanzania"},
+            {"Which mountain is the tallest in Tanzania?", "Mount Kilimanjaro"},
             {"Which mountain is the highest in North America?", "Mount Denali"},
             {"Which mountain range forms a natural border between Europe and Asia?", "Ural Mountains"},
             {"What is the tallest mountain in Africa?", "Mount Kilimanjaro"},
             {"What is the highest mountain in South America?", "Mount Aconcagua"},
             {"Which mountain is considered the second highest in the world?", "K2"},
             {"Which mountain range is located in the western United States?", "Rocky Mountains"},
-            {"Where are the Andes Mountains located?", "South America"},
+            {"Which mountain range runs along the west coast of South America?", "Andes Mountains"},
             {"What is the tallest mountain in the Alps?", "Mount Blanc"},
             {"Which famous Japanese mountain is an active volcano?", "Mount Fuji"},
-            {"What is the longest mountain range on Earth?", "Andes"},
+            {"What is the longest mountain range on Earth?", "Andes Mountains"},
             {"Which mountain is the highest peak in Antarctica?", "Vinson Massif"},
             {"Which Himalayan peak is known as the \"Matterhorn of the Himalayas\" due to its distinct shape?", "Ama Dablam"},
             {"Which U.S. mountain erupted in 1980, causing significant destruction?", "Mount Saint Helens"},
@@ -332,7 +329,7 @@ namespace Protmusis
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 List<string> answerOptions = GenerateAnswerOptions(correctAnswer);
                 Console.ResetColor();
-                Console.Write("\nYour answer (choose 1 to 4, or 'q' to return to main menu, \"exit\" to quit the game): ");
+                Console.Write("\nChoose 1 to 4, or 'q' to return to main menu, \"exit\" to quit the game");
                 GetUserChoice(1, 4);
 
                 if (userChoice == 113 || quitGame)
@@ -348,7 +345,6 @@ namespace Protmusis
                 else
                 {
                     Console.WriteLine("Incorrect. The correct answer was: {0}", correctAnswer);
-
                 }
 
                 questions.RemoveAt(indexQA);
@@ -364,13 +360,29 @@ namespace Protmusis
         public static string correctAnswer;
         public static List<string> GenerateAnswerOptions(string correctAnswer)
         {
-            List<string> answerOptions = answers
-                .Where(answer => answer != correctAnswer)
-                .OrderBy(_ => random.Next())
-                .Take(3)
-                .Append(correctAnswer)
-                .OrderBy(_ => random.Next())
-                .ToList();
+            List<string> answerOptions = new List<string>();
+            answerOptions.Add(correctAnswer);
+
+            List<string> remainingAnswers = answers.Where(answer => answer != correctAnswer).ToList();
+            remainingAnswers = remainingAnswers.OrderBy(_ => random.Next()).Take(3).ToList();
+            answerOptions.AddRange(remainingAnswers);
+
+            while (answerOptions.Count < 4)
+            {
+                var currentCategory = categories.FirstOrDefault(c => c.ContainsKey(questions[indexQA]));
+
+                if (currentCategory != null)
+                {
+                    var randomItem = currentCategory.ElementAt(random.Next(currentCategory.Count));
+
+                    if (!answerOptions.Contains(randomItem.Value) && randomItem.Value != correctAnswer)
+                    {
+                        answerOptions.Add(randomItem.Value);
+                    }
+                }
+            }
+
+            answerOptions = answerOptions.OrderBy(_ => random.Next()).ToList();
 
             for (int i = 0; i < answerOptions.Count; i++)
             {
