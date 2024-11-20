@@ -1,5 +1,5 @@
 ﻿using _3_paskaita_Inheritance_paveldejimas__OOP;
-using _3_paskaita_Inheritance_paveldejimas__OOP.Product;
+using _3_paskaita_Inheritance_paveldejimas__OOP.Models;
 
 Car car = new(50);
 Bike bike = new(30);
@@ -26,8 +26,13 @@ manager.programmers.Add(new("C++", "P3", 22000));
 //manager.PrintProgrammers();
 //manager.PrintEmployees();
 
-var food = new Food("Desra", 3.50);
-food.PrintInfo();
+var desra = new Food("Desra", 3.50);
+desra.PrintInfo();
+desra.PrintAllInfo();
 
-var electronic = new Electronic("Klaviatura", 57.50);
-electronic.PrintInfo();
+var klaviatura = new Electronic("Klaviatura", 57.50);
+klaviatura.PrintInfo();
+klaviatura.PrintAllInfo();
+
+var p1 = new Product("Test", 4.20);
+p1.PrintAllInfo();

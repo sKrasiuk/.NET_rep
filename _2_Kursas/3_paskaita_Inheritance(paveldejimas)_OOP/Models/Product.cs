@@ -1,4 +1,4 @@
-﻿namespace _3_paskaita_Inheritance_paveldejimas__OOP.Product
+﻿namespace _3_paskaita_Inheritance_paveldejimas__OOP.Models
 {
     public class Product
     {
