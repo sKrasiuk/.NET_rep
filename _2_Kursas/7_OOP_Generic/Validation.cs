@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace _7_OOP_Generic
+﻿namespace _7_OOP_Generic
 {
     public static class Validation<T, F>
     {
