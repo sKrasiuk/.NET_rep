@@ -1,6 +1,6 @@
 ﻿string path = "C:\\DEV_\\GitHub\\.NET_rep\\_2_Kursas\\6_OOP_Streams\\Test2.txt";
 string path2 = "C:\\DEV_\\GitHub\\.NET_rep\\_2_Kursas\\6_OOP_Streams\\Test3.txt";
-string path3 = "C:\\DEV_\\GitHub\\.NET_rep\\_2_Kursas\\6_OOP_Streams\\Test.bin";
+string path3 = "C:\\DEV_\\GitHub\\.NET_rep\\_2_Kursas\\6_OOP_Streams\\Test.txt";
 
 //string content = File.ReadAllText(path);
 //Console.WriteLine(content);
@@ -49,4 +49,8 @@ using (var bReader = new BinaryReader(File.Open(path3, FileMode.Open)))
     int number = bReader.ReadInt32();
     double value = bReader.ReadDouble();
     string text = bReader.ReadString();
+
+    Console.WriteLine($"Int: {number}");
+    Console.WriteLine($"Double: {value}");
+    Console.WriteLine($"String: {text}");
 }
