@@ -43,14 +43,16 @@ var peopleAgeMoreThan40 = people.Where(p => p.Age > 40).OrderBy(p => p.Age).ToLi
 
 var peopleWithPets = new List<Person>
 {
-    new Person("Maryte", new List<Pet> {new Pet("Suo1")}),
-    new Person("Petriukas",new List<Pet> {new Pet("Suo2")}),
-    new Person("Onute", new List<Pet> {new Pet("Suo3")}),
-    new Person("Jonukas", new List<Pet> {new Pet("Suo4")}),
-    new Person("Izodorius", new List<Pet> {new Pet("Suo5")}),
+    new Person("Maryte", new List<Pet> {new Pet("Suo1", 6)}),
+    new Person("Petriukas",new List<Pet> {new Pet("Kate1", 2)}),
+    new Person("Onute", new List<Pet> {new Pet("Suo2", 1)}),
+    new Person("Jonukas", new List<Pet> {new Pet("Kate2", 9)}),
+    new Person("Izodorius", new List<Pet> {new Pet("Suo3", 4)}),
 };
 
-
+var allPets = peopleWithPets.SelectMany(x => x.Pets.Select(x => x.Name)).ToList();
+var allPetsSou = peopleWithPets.SelectMany(x => x.Pets.Where(x => x.Name.StartsWith("S"))).ToList();
+var allPetsByAge = peopleWithPets.SelectMany(x => x.Pets.Where(x => x.Age > 5)).ToList();
 
 
 
