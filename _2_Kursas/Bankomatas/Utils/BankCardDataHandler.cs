@@ -36,16 +36,16 @@ namespace Bankomatas.Utils
             SaveBankCards(bankCards);
         }
 
-        public static void RemoveBankCard(BankCard bankCard)
-        {
-            var bankCards = LoadBankCards();
-            var cardToRemove = bankCards.FirstOrDefault(card => card.CardName == card.CardName);
+        //public static void RemoveBankCard(BankCard bankCard)
+        //{
+        //    var bankCards = LoadBankCards();
+        //    var cardToRemove = bankCards.FirstOrDefault(card => card.CardName == card.CardName);
 
-            if (cardToRemove != null)
-            {
-                bankCards.Remove(cardToRemove);
-                SaveBankCards(bankCards);
-            }
-        }
+        //    if (cardToRemove != null)
+        //    {
+        //        bankCards.Remove(cardToRemove);
+        //        SaveBankCards(bankCards);
+        //    }
+        //}
     }
 }

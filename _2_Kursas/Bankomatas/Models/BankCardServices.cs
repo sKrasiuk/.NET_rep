@@ -77,7 +77,7 @@ namespace Bankomatas.Models
 
         public void ShowTransactions()
         {
-            Console.WriteLine("Transactions:");
+            Console.WriteLine($"Transactions: [{BankCard.Transactions.Length - BankCard.TransactionIndex}/{BankCard.Transactions.Length}]");
             int start = Math.Max(0, transactionIndex - 5);
 
             for (int i = start; i < transactionIndex; i++)
