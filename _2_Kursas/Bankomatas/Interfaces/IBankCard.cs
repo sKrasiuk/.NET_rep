@@ -2,14 +2,13 @@
 {
     public interface IBankCard
     {
-        Guid CardId { get; }
-        string CardName { get; }
-        decimal CardBalance { get; }
-        decimal[] Transactions { get; }
-        decimal MaxWithdrawValue { get; }
-
-        void WithdrawMoney(decimal withdrawAmount);
-        void ShowTransactions();
-        void ShowBalance();
+        Guid CardId { get; set; }
+        string CardName { get; set; }
+        decimal CardBalance { get; set; }
+        decimal[] Transactions { get; set; }
+        decimal MaxWithdrawValue { get; set; }
+        string Password { get; set; }
+        public DateTime LastResetDate { get; set; }
+        public int TransactionIndex { get; set; }
     }
 }
