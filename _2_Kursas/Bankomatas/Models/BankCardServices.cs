@@ -15,12 +15,9 @@ namespace Bankomatas.Models
             BankCardDataHandler.AddUpdateBankCard(bankCard);
         }
 
-        //private int transactionIndex = 0;
-        //private DateTime lastResetDate;
-
         public void DepositMoney(decimal depositAmount)
         {
-            ResetTransactionsCounterOnNewDay();
+            //ResetTransactionsCounterOnNewDay();
 
             if (depositAmount <= 0)
             {
@@ -43,7 +40,7 @@ namespace Bankomatas.Models
 
         public void WithdrawMoney(decimal withdrawAmount)
         {
-            ResetTransactionsCounterOnNewDay();
+            //ResetTransactionsCounterOnNewDay();
 
             if (withdrawAmount > BankCard.MaxWithdrawValue)
             {
@@ -77,7 +74,8 @@ namespace Bankomatas.Models
 
         public void ShowTransactions()
         {
-            Console.WriteLine($"Transactions: [{BankCard.Transactions.Length - BankCard.TransactionIndex}/{BankCard.Transactions.Length}]");
+            //ResetTransactionsCounterOnNewDay();
+            Console.WriteLine($"Transactions: [{BankCard.Transactions.Length - BankCard.TransactionIndex}/{BankCard.Transactions.Length}] Remaining.");
             int start = Math.Max(0, transactionIndex - 5);
 
             for (int i = start; i < transactionIndex; i++)
@@ -96,15 +94,15 @@ namespace Bankomatas.Models
             Console.WriteLine($"Account balance:\n\t{BankCard.CardBalance:C}");
         }
 
-        private void ResetTransactionsCounterOnNewDay()
-        {
-            if (DateTime.Now.Date != BankCard.LastResetDate)
-            {
-                BankCard.LastResetDate = DateTime.Now.Date;
-                transactionIndex = 0;
-                BankCard.TransactionIndex = transactionIndex;
-                BankCardDataHandler.AddUpdateBankCard(BankCard);
-            }
-        }
+        //private void ResetTransactionsCounterOnNewDay()
+        //{
+        //    if (DateTime.Now.Date != BankCard.LastResetDate)
+        //    {
+        //        BankCard.LastResetDate = DateTime.Now.Date;
+        //        transactionIndex = 0;
+        //        BankCard.TransactionIndex = transactionIndex;
+        //        BankCardDataHandler.AddUpdateBankCard(BankCard);
+        //    }
+        //}
     }
 }

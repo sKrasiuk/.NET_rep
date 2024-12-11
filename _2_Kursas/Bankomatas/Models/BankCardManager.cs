@@ -2,33 +2,33 @@
 {
     public class BankCardManager
     {
-        private readonly UserLogin _authService;
+        private readonly Authenticator Authentication;
 
         public BankCardManager()
         {
-            _authService = new UserLogin();
+            Authentication = new Authenticator();
         }
 
         public void Start()
         {
-            Console.Write("Enter Card Name: ");
-            string cardName = Console.ReadLine();
-
-            Console.Write("Enter Password: ");
-            string password = Console.ReadLine();
-
-            var bankCard = _authService.AuthenticateUser(cardName, password);
+            Console.WriteLine("Welcome to ATM!");
+            var bankCard = Authentication.AuthenticateUser("", "");
 
             if (bankCard != null)
             {
                 var services = new BankCardServices(bankCard);
                 ShowMenu(services);
             }
+            else
+            {
+                Console.WriteLine("Authentication failed. Exiting...");
+            }
         }
 
         private void ShowMenu(BankCardServices services)
         {
             bool exit = false;
+            services.ShowBalance();
 
             while (!exit)
             {

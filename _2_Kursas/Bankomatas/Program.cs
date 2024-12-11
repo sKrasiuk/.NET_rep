@@ -6,8 +6,6 @@ namespace Bankomatas
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to ATM!");
-
             var manager = new BankCardManager();
             manager.Start();
         }
