@@ -84,7 +84,7 @@
 
                     case "5":
                         exit = true;
-                        Console.WriteLine("Exiting...");
+                        Console.WriteLine("Terminating...");
                         break;
 
                     default:
