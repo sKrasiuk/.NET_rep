@@ -1,0 +1,28 @@
+{
+    "dotnet.defaultSolution": "TEST.sln",
+    "vsintellicode.java.completionsEnabled": false,
+    "vsintellicode.modify.editor.suggestSelection": "enabled",
+    "vsintellicode.python.completionsEnabled": false,
+    "vsintellicode.sql.completionsEnabled": false,
+    "vsintellicode.typescript.completionsEnabled": false,
+    "intellicodeApiExamples.python.enabled": false,
+    "intellicodeApiExamples.typescript.enabled": false,
+    "typescript.tsserver.web.projectWideIntellisense.enabled": false,
+    "typescript.tsserver.web.typeAcquisition.enabled": false,
+    "codeium.enableInComments": false,
+    "codeium.enableCodeLens": false,
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.inlineSuggest.edits.experimental.enabled": false,
+    "editor.suggestOnTriggerCharacters": false,
+    "terminal.integrated.suggest.quickSuggestions": false,
+    "codeium.enableConfig": {
+        "*": true
+    },
+    "editor.suggest.showWords": false,
+    "codeium.disableSupercomplete": true,
+    "javascript.suggest.enabled": false,
+    "typescript.suggest.enabled": false,
+    "editor.quickSuggestionsDelay": 0,
+    "editor.suggest.selectionMode": "never",
+    "editor.inlineSuggest.enabled": false
+}
