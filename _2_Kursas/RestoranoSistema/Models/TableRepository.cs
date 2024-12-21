@@ -17,9 +17,19 @@ public class TableRepository
             tables.Add(new Table(number, seats));
         }
     }
-
     public List<Table> GetTables()
     {
         return tables;
     }
+    public void UpdateTableStatus(int tableId, bool isOccupied)
+    {
+        var existingTable = tables.FirstOrDefault(t => t.Id == tableId);
+        if (existingTable != null)
+        {
+            existingTable.IsOccupied = isOccupied;
+        }
+    }
 }
+
+
+

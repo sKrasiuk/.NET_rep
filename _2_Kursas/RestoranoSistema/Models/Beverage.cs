@@ -4,7 +4,7 @@ namespace RestoranoSistema.Models;
 
 public class Beverage : Product
 {
-    public Beverage(int id, string name, decimal price) : base(id, name, price, "Beverage")
+    public Beverage(string name, decimal price) : base(name, price, "Beverage")
     {
     }
 }

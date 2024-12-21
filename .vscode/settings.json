@@ -10,7 +10,7 @@
     "typescript.tsserver.web.projectWideIntellisense.enabled": false,
     "typescript.tsserver.web.typeAcquisition.enabled": false,
     "codeium.enableInComments": false,
-    "codeium.enableCodeLens": false,
+    "codeium.enableCodeLens": true,
     "editor.acceptSuggestionOnEnter": "on",
     "editor.inlineSuggest.edits.experimental.enabled": false,
     "editor.suggestOnTriggerCharacters": true,
@@ -27,5 +27,13 @@
     "editor.inlineSuggest.enabled": false,
     "editor.suggest.preview": false,
     "editor.tabCompletion": "on",
-    "emmet.preferences": {}
+    "emmet.preferences": {},
+    "debug.confirmOnExit": "never",
+    "debug.showSubSessionsInToolBar": true,
+    "debug.console.closeOnEnd": false,
+    "debug.console.acceptSuggestionOnEnter": "off",
+    "debug.terminal.clearBeforeReusing": true,
+    "terminal.explorerKind": "integrated",
+    "debug.console.fontSize": 14,
+    "csharp.debug.console": "integratedTerminal"
 }

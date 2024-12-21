@@ -1,4 +1,5 @@
 ﻿using System;
+using RestoranoSistema.Models;
 
 namespace RestoranoSistema
 {
@@ -6,7 +7,15 @@ namespace RestoranoSistema
     {
         static void Main(string[] args)
         {
+            var products = new ProductRepository();
+            var tables = new TableRepository();
+            var waiters = new WaiterRepository();
 
+            foreach (var waiter in waiters.GetWaiters())
+            {
+                Console.WriteLine($"{waiter.Name}");
+            }
         }
     }
 }
+

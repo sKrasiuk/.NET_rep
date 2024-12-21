@@ -1,21 +1,32 @@
 using System;
+using System.Collections.Generic;
 
 namespace RestoranoSistema.Models;
 
 public class Waiter
 {
-    public void TakeOrder(Table table, List<Product> products)
+    public string Name { get; set; }
+    public List<Order> Orders { get; set; }
+
+    public Waiter(string name)
     {
-        // Logic to take an order goes here
+        Name = name;
+        Orders = new List<Order>();
     }
 
-    public void ServeFoodAndDrinks(Table table)
+    public void TakeOrder(Order order)
     {
-        // Logic to serve food and drinks goes here
+        Orders.Add(order);
     }
 
-    public void HandlePayment(Table table, decimal paymentAmount)
+    public void RemoveOrder(Order order)
     {
-        // Logic to handle payment goes here
+        Orders.Remove(order);
+    }
+
+    public void ManageOrders(Restaurant restaurant)
+    {
+        // Implement managing orders, e.g., assigning tables, taking orders, etc.
     }
 }
+

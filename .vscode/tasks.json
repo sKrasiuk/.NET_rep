@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "pause",
+			"type": "shell",
+			"command": "read -p \"Press any key to continue...\""
+		}
+	]
+}

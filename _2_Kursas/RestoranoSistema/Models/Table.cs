@@ -4,28 +4,27 @@ namespace RestoranoSistema.Models;
 
 public class Table
 {
-    public int Number { get; set; }
-    public int Seats { get; set; }
+    public int Id { get; init; }
+    public int Seats { get; init; }
     public bool IsOccupied { get; set; }
-    // public Order Order { get; set; }
+    public List<Order> Orders { get; set; }
 
-    public Table(int number, int seats)
+    public Table(int id, int seats)
     {
-        Number = number;
+        Id = id;
         Seats = seats;
         IsOccupied = false;
-        // Order = null;
+        Orders = new List<Order>();
     }
-
-    public void Occupy(Order order)
+    public void Occupy()
     {
         IsOccupied = true;
-        // Order = order;
     }
 
-    public void Vacate()
+    public void Free()
     {
         IsOccupied = false;
-        // Order = null;
     }
+
 }
+

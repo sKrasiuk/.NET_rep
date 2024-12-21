@@ -15,7 +15,7 @@ public class ProductRepository
             int id = int.Parse(parts[0]);
             string name = parts[1];
             decimal price = decimal.Parse(parts[2]);
-            products.Add(new Food(id, name, price));
+            products.Add(new Food(name, price));
         }
 
         string[] beverageLines = File.ReadAllLines("beverage.txt");
@@ -25,7 +25,7 @@ public class ProductRepository
             int id = int.Parse(parts[0]);
             string name = parts[1];
             decimal price = decimal.Parse(parts[2]);
-            products.Add(new Beverage(id, name, price));
+            products.Add(new Beverage(name, price));
         }
     }
 
