@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace RestoranoSistema.Models;
 
@@ -29,7 +32,13 @@ public class TableRepository
             existingTable.IsOccupied = isOccupied;
         }
     }
+    public bool IsTableOccupied(int tableId)
+    {
+        var table = tables.FirstOrDefault(t => t.Id == tableId);
+        return table != null && table.IsOccupied;
+    }
 }
+
 
 
 

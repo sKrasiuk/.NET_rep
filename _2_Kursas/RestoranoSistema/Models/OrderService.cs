@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RestoranoSistema.Models;
 
@@ -23,11 +25,24 @@ public class OrderService
         {
             var orderId = orderRepository.GetOrders().Count + 1;
             var order = new Order(tableId, table, products);
-            foreach (var product in products)
-            {
-                order.Products.Add(product);
-            }
             orderRepository.AddOrder(order);
+            MarkTableAsOccupied(tableId);
         }
     }
+
+    public void MarkTableAsOccupied(int tableId)
+    {
+        tableRepository.UpdateTableStatus(tableId, true);
+    }
+
+    public void MarkTableAsFree(int tableId)
+    {
+        tableRepository.UpdateTableStatus(tableId, false);
+    }
+
+    public List<Order> GetActiveOrders()
+    {
+        return orderRepository.GetOrders().Where(o => tableRepository.IsTableOccupied(o.TableNumber)).ToList();
+    }
 }
+

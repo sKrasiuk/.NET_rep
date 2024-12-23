@@ -7,14 +7,9 @@ namespace RestoranoSistema
     {
         static void Main(string[] args)
         {
-            var products = new ProductRepository();
-            var tables = new TableRepository();
-            var waiters = new WaiterRepository();
+            var orderService = new OrderService(new OrderRepository(), new TableRepository(), new ProductRepository());
+            var waiterRepository = new WaiterRepository();
 
-            foreach (var waiter in waiters.GetWaiters())
-            {
-                Console.WriteLine($"{waiter.Name}");
-            }
         }
     }
 }

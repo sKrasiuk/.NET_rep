@@ -13,8 +13,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "console": "externalTerminal",
-            "postDebugTask": "pause"
+            "console": "integratedTerminal",
         },
     ],
 }

@@ -4,12 +4,16 @@ namespace RestoranoSistema.Models;
 
 public class Restaurant
 {
+    public List<Table> Tables { get; set; }
+
+
     private TableRepository _tableRepository;
     private ProductRepository _productRepository;
     private WaiterRepository _waiterRepository;
 
     public Restaurant()
     {
+        Tables = new List<Table>();
         _tableRepository = new TableRepository();
         _productRepository = new ProductRepository();
         _waiterRepository = new WaiterRepository();

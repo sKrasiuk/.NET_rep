@@ -12,7 +12,7 @@
     "codeium.enableInComments": false,
     "codeium.enableCodeLens": true,
     "editor.acceptSuggestionOnEnter": "on",
-    "editor.inlineSuggest.edits.experimental.enabled": false,
+    "editor.inlineSuggest.edits.experimental.enabled": true,
     "editor.suggestOnTriggerCharacters": true,
     "terminal.integrated.suggest.quickSuggestions": false,
     "codeium.enableConfig": {
@@ -35,5 +35,23 @@
     "debug.terminal.clearBeforeReusing": true,
     "terminal.explorerKind": "integrated",
     "debug.console.fontSize": 14,
-    "csharp.debug.console": "integratedTerminal"
+    "csharp.debug.console": "integratedTerminal",
+    "dotnet.defaultSolution": "ConsoleApp1.sln",
+    "intellicode-completions-cdk.runAlongsideCopilot": true,
+    "emmet.showSuggestionsAsSnippets": true,
+    "emmet.useInlineCompletions": true,
+    "omnisharp.enableAsyncCompletion": false,
+    "editor.defaultFormatter": "ms-dotnettools.csdevkit",
+    "csharp.inlayHints.enableInlayHintsForTypes": false,
+    "dotnet.inlayHints.enableInlayHintsForParameters": false,
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp"
+    },
+    "editor.inlineSuggest.suppressSuggestions": false,
+    "[snippets]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }
