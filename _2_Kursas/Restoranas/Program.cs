@@ -12,13 +12,19 @@ namespace Restoranas
             var waitersRepository = new WaitersRepository();
             var menuRepository = new MenuRepository();
             var tablesRepository = new TablesRepository();
+            var orderRepository = new OrderRepository();
 
             var loginService = new LoginService(waitersRepository);
-            var waiter = loginService.LogIn();
+            var orderManager = new OrderManager(tablesRepository, menuRepository, orderRepository);
 
-            if (waiter != null)
+            while (true)
             {
-                var orderManager = new OrderManager(tablesRepository, menuRepository);
+                var waiter = loginService.LogIn();
+                if (waiter == null)
+                {
+                    break;
+                }
+
                 orderManager.ShowMenu(waiter);
             }
         }

@@ -6,12 +6,6 @@ namespace Restoranas.Services;
 
 public class LoginService
 {
-    // private List<Waiter> waiters;
-
-    // public LoginService(List<Waiter> waiters)
-    // {
-    //     this.waiters = waiters;
-    // }
     private readonly WaitersRepository waitersRepository;
 
     public LoginService(WaitersRepository waitersRepository)
@@ -21,9 +15,7 @@ public class LoginService
 
     public Waiter LogIn()
     {
-        Waiter waiter = null;
-
-        while (waiter == null)
+        while (true)
         {
             Console.Clear();
             Console.WriteLine("Available Waiters:");
@@ -31,26 +23,26 @@ public class LoginService
             {
                 Console.WriteLine($"{w.Id}. {w.Name}");
             }
+            Console.WriteLine("\n0. Exit Application");
 
-            Console.Write("Enter Waiter ID to log in: ");
+            Console.Write("\nEnter Waiter ID (0 to exit): ");
             if (int.TryParse(Console.ReadLine(), out int waiterId))
             {
-                waiter = waitersRepository.FirstOrDefault(w => w.Id == waiterId);
-                if (waiter == null)
+                if (waiterId == 0)
                 {
-                    Console.WriteLine("Invalid waiter ID.");
+                    return null;
                 }
-                else
+
+                var waiter = waitersRepository.FirstOrDefault(w => w.Id == waiterId);
+                if (waiter != null)
                 {
                     Console.WriteLine($"Logged in as {waiter.Name}");
+                    Console.ReadKey();
+                    return waiter;
                 }
             }
-            else
-            {
-                Console.WriteLine("Invalid input. Please enter a valid waiter ID.");
-            }
+            Console.WriteLine("Invalid input. Please try again.");
+            Console.ReadKey();
         }
-
-        return waiter;
     }
 }

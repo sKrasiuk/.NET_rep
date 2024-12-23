@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using Restoranas.Models;
+using Restoranas.Repositories;
 
 namespace Restoranas.Managers;
 
@@ -8,11 +9,13 @@ public class OrderManager
 {
     private readonly IEnumerable<Table> tables;
     private readonly IEnumerable<MenuItem> menuItems;
+    private readonly OrderRepository orderRepository;
 
-    public OrderManager(IEnumerable<Table> tables, IEnumerable<MenuItem> menuItems)
+    public OrderManager(IEnumerable<Table> tables, IEnumerable<MenuItem> menuItems, OrderRepository orderRepository)
     {
         this.tables = tables;
         this.menuItems = menuItems;
+        this.orderRepository = orderRepository;
     }
 
     public void ShowMenu(Waiter waiter)
@@ -24,7 +27,7 @@ public class OrderManager
             Console.WriteLine("2. Add Item to Order");
             Console.WriteLine("3. Close Order");
             Console.WriteLine("4. View Active Orders");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Logout");
             Console.Write("Select an option: ");
             var option = Console.ReadLine();
 
@@ -46,6 +49,7 @@ public class OrderManager
                     return;
                 default:
                     Console.WriteLine("Invalid option. Please try again.");
+                    Console.ReadKey();
                     break;
             }
         }
@@ -53,7 +57,8 @@ public class OrderManager
 
     private bool IsTableOccupied(int tableId, Waiter waiter)
     {
-        return waiter.Orders.Any(o => o.IsActive && o.AssignedTable.Id == tableId);
+        // return waiter.Orders.Any(o => o.IsActive && o.AssignedTable.Id == tableId);
+        return orderRepository.IsTableOccupied(tableId);
     }
 
     private void CreateOrder(Waiter waiter)
@@ -64,7 +69,7 @@ public class OrderManager
             Console.WriteLine("Available Tables:");
             foreach (var t in tables)
             {
-                bool isOccupied = IsTableOccupied(t.Id, waiter) || t.IsOccupied;
+                bool isOccupied = orderRepository.IsTableOccupied(t.Id);
                 Console.WriteLine($"{t.Id}. Seats: {t.Seats}, Status: {(isOccupied ? "Occupied" : "Available")}");
             }
             Console.WriteLine("0. Cancel");
@@ -93,7 +98,7 @@ public class OrderManager
                 continue;
             }
 
-            if (IsTableOccupied(table.Id, waiter))
+            if (orderRepository.IsTableOccupied(table.Id))
             {
                 Console.WriteLine("Table is already occupied.");
                 Console.ReadKey();
@@ -101,6 +106,7 @@ public class OrderManager
             }
 
             var order = waiter.CreateOrder(table);
+            orderRepository.AddOrder(order);
             table.IsOccupied = true;
             Console.WriteLine($"Order created with ID: {order.Id}");
             ShowMenuAndAddItems(order);
@@ -183,7 +189,7 @@ public class OrderManager
         while (true)
         {
             Console.Clear();
-            var activeOrders = waiter.Orders.Where(o => o.IsActive).ToList();
+            var activeOrders = orderRepository.GetActiveOrders(waiter);
             if (!activeOrders.Any())
             {
                 Console.WriteLine("No active orders.");
@@ -195,8 +201,9 @@ public class OrderManager
             Console.WriteLine($"Active Orders for Waiter {waiter.Name}:");
             foreach (var order in activeOrders)
             {
-                Console.WriteLine($"Order ID: {order.Id}, Table: {order.AssignedTable.Id}");
-                ShowOrderSummary(order);
+                // Console.WriteLine($"Order ID: {order.Id}, Table: {order.AssignedTable.Id}");
+                // ShowOrderSummary(order);
+                ShowOrderDetails(order);
             }
             Console.WriteLine("\n0. Cancel");
 
@@ -231,7 +238,7 @@ public class OrderManager
     private void CloseOrder(Waiter waiter)
     {
         Console.Clear();
-        var activeOrders = waiter.Orders.Where(o => o.IsActive).ToList();
+        var activeOrders = orderRepository.GetActiveOrders(waiter);
         if (!activeOrders.Any())
         {
             Console.WriteLine("No active orders to close.");
@@ -244,15 +251,7 @@ public class OrderManager
 
         foreach (var order in activeOrders)
         {
-            Console.WriteLine($"\nOrder ID: {order.Id}");
-            Console.WriteLine($"Table ID: {order.AssignedTable.Id}");
-            Console.WriteLine("Items:");
-            foreach (var item in order.Items)
-            {
-                Console.WriteLine($"  {item.Quantity} x {item.Item.Name} - {item.Item.Price:C}");
-            }
-            var total = order.Items.Sum(i => i.Item.Price * i.Quantity);
-            Console.WriteLine($"Total: {total:C}");
+            ShowOrderDetails(order);
         }
 
         Console.WriteLine("\nEnter order ID to close (0 to cancel): ");
@@ -268,8 +267,9 @@ public class OrderManager
             var orderToClose = activeOrders.FirstOrDefault(o => o.Id == orderId);
             if (orderToClose != null)
             {
-                waiter.CloseOrder(orderToClose);
-                orderToClose.AssignedTable.IsOccupied = false;
+                // waiter.CloseOrder(orderToClose);
+                // orderToClose.AssignedTable.IsOccupied = false;
+                orderRepository.CloseOrder(orderToClose);
                 Console.WriteLine("Order closed successfully.");
             }
             else
@@ -317,6 +317,8 @@ public class OrderManager
             Console.ReadKey();
             return true;
         }
+        Console.WriteLine("Acception denied.");
+        Console.ReadKey();
         return false;
     }
 
@@ -330,7 +332,7 @@ public class OrderManager
     private void ViewActiveOrders(Waiter waiter)
     {
         Console.Clear();
-        var activeOrders = waiter.Orders.Where(o => o.IsActive).ToList();
+        var activeOrders = orderRepository.GetActiveOrders(waiter);
 
         if (!activeOrders.Any())
         {
@@ -343,18 +345,23 @@ public class OrderManager
         Console.WriteLine($"Active Orders for Waiter {waiter.Name}:");
         foreach (var order in activeOrders)
         {
-            Console.WriteLine($"\nOrder ID: {order.Id}");
-            Console.WriteLine($"Table ID: {order.AssignedTable.Id}");
-            Console.WriteLine("Items:");
-            foreach (var item in order.Items)
-            {
-                Console.WriteLine($"  {item.Quantity} x {item.Item.Name} - {item.Item.Price:C}");
-            }
-            var total = order.Items.Sum(i => i.Item.Price * i.Quantity);
-            Console.WriteLine($"Total: {total:C}");
+            ShowOrderDetails(order);
         }
 
         Console.WriteLine("\nPress any key to return to main menu...");
         Console.ReadKey();
+    }
+
+    private void ShowOrderDetails(Order order)
+    {
+        Console.WriteLine($"\nOrder ID: {order.Id}");
+        Console.WriteLine($"Table ID: {order.AssignedTable.Id}");
+        Console.WriteLine("Items:");
+        foreach (var item in order.Items)
+        {
+            Console.WriteLine($"  {item.Quantity} x {item.Item.Name} - {item.Item.Price:C}");
+        }
+        var total = order.Items.Sum(i => i.Item.Price * i.Quantity);
+        Console.WriteLine($"Total: {total:C}");
     }
 }
