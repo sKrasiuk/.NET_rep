@@ -9,10 +9,12 @@ public class Order
     public Table AssignedTable { get; set; }
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     public bool IsActive { get; set; }
+    public bool IsIdAssigned { get; set; }
 
     public Order()
     {
         IsActive = true;
+        IsIdAssigned = false;
     }
 
     public void AddItem(MenuItem item, int quantity)

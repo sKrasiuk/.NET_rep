@@ -15,7 +15,11 @@ public class OrderRepository
 
     public void SetOrderId(Order order)
     {
-        order.Id = nextOrderId++;
+        if (!order.IsIdAssigned)
+        {
+            order.Id = nextOrderId++;
+            order.IsIdAssigned = true;
+        }
     }
 
     public void CloseOrder(Order order)

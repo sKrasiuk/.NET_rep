@@ -108,6 +108,7 @@ public class OrderManager
             var order = waiter.CreateOrder(table);
             orderRepository.AddOrder(order);
             table.IsOccupied = true;
+            // orderRepository.SetOrderId(order);
             Console.WriteLine($"Order created with ID: {order.Id}");
             ShowMenuAndAddItems(order);
             return;
@@ -121,7 +122,7 @@ public class OrderManager
         {
             Console.Clear();
             // Console.WriteLine($"Current Order (ID: {order.Id}):");
-            Console.WriteLine($"Current Order (ID: {orderRepository.GetNextOrderId()}):");
+            Console.WriteLine($"Current Order (ID: {(order.IsIdAssigned ? order.Id : orderRepository.GetNextOrderId())}):");
             ShowOrderSummary(order);
 
             Console.WriteLine("\nSelect category:");
