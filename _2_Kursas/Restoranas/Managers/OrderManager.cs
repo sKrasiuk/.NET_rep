@@ -55,11 +55,11 @@ public class OrderManager
         }
     }
 
-    private bool IsTableOccupied(int tableId, Waiter waiter)
-    {
-        // return waiter.Orders.Any(o => o.IsActive && o.AssignedTable.Id == tableId);
-        return orderRepository.IsTableOccupied(tableId);
-    }
+    // private bool IsTableOccupied(int tableId, Waiter waiter)
+    // {
+    //     // return waiter.Orders.Any(o => o.IsActive && o.AssignedTable.Id == tableId);
+    //     return orderRepository.IsTableOccupied(tableId);
+    // }
 
     private void CreateOrder(Waiter waiter)
     {
@@ -120,7 +120,8 @@ public class OrderManager
         while (!orderAccepted)
         {
             Console.Clear();
-            Console.WriteLine($"Current Order (ID: {order.Id}):");
+            // Console.WriteLine($"Current Order (ID: {order.Id}):");
+            Console.WriteLine($"Current Order (ID: {orderRepository.GetNextOrderId()}):");
             ShowOrderSummary(order);
 
             Console.WriteLine("\nSelect category:");
@@ -140,8 +141,16 @@ public class OrderManager
                     ShowCategoryItems(order, "Drink");
                     break;
                 case "3":
-                    if (AcceptOrder(order))
+                    if (order.Items.Any())
+                    {
+                        AcceptOrder(order);
                         orderAccepted = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cannot accept empty order. Please add items first.");
+                        Console.ReadKey();
+                    }
                     break;
                 case "0":
                     CancelOrder(order);
@@ -313,6 +322,7 @@ public class OrderManager
         if (choice == "Y")
         {
             order.IsActive = true;
+            orderRepository.SetOrderId(order);
             Console.WriteLine("Order accepted!");
             Console.ReadKey();
             return true;
@@ -324,7 +334,9 @@ public class OrderManager
 
     private void CancelOrder(Order order)
     {
-        order.AssignedTable.IsOccupied = false;
+        // order.IsActive = false;
+        // order.AssignedTable.IsOccupied = false;
+        orderRepository.RemoveOrder(order);
         Console.WriteLine("Order cancelled");
         Console.ReadKey();
     }

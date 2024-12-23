@@ -6,10 +6,16 @@ namespace Restoranas.Repositories;
 public class OrderRepository
 {
     private static readonly List<Order> activeOrders = new List<Order>();
+    private static int nextOrderId = 1;
 
     public void AddOrder(Order order)
     {
         activeOrders.Add(order);
+    }
+
+    public void SetOrderId(Order order)
+    {
+        order.Id = nextOrderId++;
     }
 
     public void CloseOrder(Order order)
@@ -31,5 +37,17 @@ public class OrderRepository
     public bool IsTableOccupied(int tableId)
     {
         return activeOrders.Any(o => o.IsActive && o.AssignedTable.Id == tableId);
+    }
+
+    public void RemoveOrder(Order order)
+    {
+        order.IsActive = false;
+        order.AssignedTable.IsOccupied = false;
+        activeOrders.Remove(order);
+    }
+
+    public int GetNextOrderId()
+    {
+        return nextOrderId;
     }
 }

@@ -4,9 +4,7 @@ namespace Restoranas.Models;
 
 public class Order
 {
-    private static int nextId = 1;
-
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public Waiter AssignedWaiter { get; set; }
     public Table AssignedTable { get; set; }
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
@@ -14,7 +12,6 @@ public class Order
 
     public Order()
     {
-        Id = nextId++;
         IsActive = true;
     }
 
