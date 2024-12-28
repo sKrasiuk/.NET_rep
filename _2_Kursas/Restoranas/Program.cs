@@ -13,9 +13,11 @@ namespace Restoranas
             var menuRepository = new MenuRepository();
             var tablesRepository = new TablesRepository();
             var orderRepository = new OrderRepository();
+            var billRepository = new BillRepository();
+            var billManager = new BillManager(billRepository);
 
             var loginService = new LoginService(waitersRepository);
-            var orderManager = new OrderManager(tablesRepository, menuRepository, orderRepository);
+            var orderManager = new OrderManager(tablesRepository, menuRepository, orderRepository, billManager);
 
             while (true)
             {

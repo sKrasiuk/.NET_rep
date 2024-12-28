@@ -10,12 +10,16 @@ public class OrderManager
     private readonly IEnumerable<Table> tables;
     private readonly IEnumerable<MenuItem> menuItems;
     private readonly OrderRepository orderRepository;
-
-    public OrderManager(IEnumerable<Table> tables, IEnumerable<MenuItem> menuItems, OrderRepository orderRepository)
+    private readonly BillManager billManager;
+    public OrderManager(IEnumerable<Table> tables,
+        IEnumerable<MenuItem> menuItems,
+        OrderRepository orderRepository,
+        BillManager billManager)
     {
         this.tables = tables;
         this.menuItems = menuItems;
         this.orderRepository = orderRepository;
+        this.billManager = billManager;
     }
 
     public void ShowMenu(Waiter waiter)
@@ -54,12 +58,6 @@ public class OrderManager
             }
         }
     }
-
-    // private bool IsTableOccupied(int tableId, Waiter waiter)
-    // {
-    //     // return waiter.Orders.Any(o => o.IsActive && o.AssignedTable.Id == tableId);
-    //     return orderRepository.IsTableOccupied(tableId);
-    // }
 
     private void CreateOrder(Waiter waiter)
     {
@@ -121,14 +119,14 @@ public class OrderManager
         while (!orderAccepted)
         {
             Console.Clear();
-            // Console.WriteLine($"Current Order (ID: {order.Id}):");
             Console.WriteLine($"Current Order (ID: {(order.IsIdAssigned ? order.Id : orderRepository.GetNextOrderId())}):");
             ShowOrderSummary(order);
 
             Console.WriteLine("\nSelect category:");
             Console.WriteLine("1. Food");
             Console.WriteLine("2. Drinks");
-            Console.WriteLine("3. Accept Order");
+            Console.WriteLine("3. Remove Item");
+            Console.WriteLine("4. Accept Order");
             Console.WriteLine("0. Cancel Order");
 
             var choice = Console.ReadLine();
@@ -142,6 +140,9 @@ public class OrderManager
                     ShowCategoryItems(order, "Drink");
                     break;
                 case "3":
+                    RemoveItemFromOrder(order);
+                    break;
+                case "4":
                     if (order.Items.Any())
                     {
                         AcceptOrder(order);
@@ -161,6 +162,33 @@ public class OrderManager
                     Console.ReadKey();
                     break;
             }
+        }
+    }
+
+    private void RemoveItemFromOrder(Order order)
+    {
+        if (!order.Items.Any())
+        {
+            Console.WriteLine("No items to remove.");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.Clear();
+        Console.WriteLine("Select item to remove:");
+        for (int i = 0; i < order.Items.Count; i++)
+        {
+            var item = order.Items[i];
+            Console.WriteLine($"{i + 1}. {item.Quantity} x {item.Item.Name} - {item.Item.Price:C}");
+        }
+        Console.WriteLine("0. Back");
+
+        Console.Write($"\nEnter item ID to remove: ");
+        if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= order.Items.Count)
+        {
+            order.RemoveItem(choice - 1);
+            Console.WriteLine("Item removed successfully.");
+            Console.ReadKey();
         }
     }
 
@@ -211,8 +239,6 @@ public class OrderManager
             Console.WriteLine($"Active Orders for Waiter {waiter.Name}:");
             foreach (var order in activeOrders)
             {
-                // Console.WriteLine($"Order ID: {order.Id}, Table: {order.AssignedTable.Id}");
-                // ShowOrderSummary(order);
                 ShowOrderDetails(order);
             }
             Console.WriteLine("\n0. Cancel");
@@ -277,10 +303,16 @@ public class OrderManager
             var orderToClose = activeOrders.FirstOrDefault(o => o.Id == orderId);
             if (orderToClose != null)
             {
-                // waiter.CloseOrder(orderToClose);
-                // orderToClose.AssignedTable.IsOccupied = false;
-                orderRepository.CloseOrder(orderToClose);
-                Console.WriteLine("Order closed successfully.");
+                if (ConfirmAction(orderToClose, "Close"))
+                {
+                    orderRepository.CloseOrder(orderToClose);
+                    billManager.GenerateBills(orderToClose);
+                    Console.WriteLine("Order closed successfully and bills generated.");
+                }
+                else
+                {
+                    Console.WriteLine("Order closure cancelled.");
+                }
             }
             else
             {
@@ -311,16 +343,19 @@ public class OrderManager
         Console.WriteLine($"Total: {order.Items.Sum(i => i.Item.Price * i.Quantity):C}");
     }
 
-    private bool AcceptOrder(Order order)
+    private bool ConfirmAction(Order order, string action)
     {
         Console.Clear();
-        Console.WriteLine("Order Summary:");
+        Console.WriteLine($"=== {action} Order ===");
         ShowOrderSummary(order);
 
-        Console.WriteLine("\nDo you want to accept this order? (Y/N)");
-        var choice = Console.ReadLine().ToUpper();
+        Console.WriteLine($"\nDo you want to {action.ToLower()} this order? (Y/N)");
+        return Console.ReadLine().ToUpper() == "Y";
+    }
 
-        if (choice == "Y")
+    private bool AcceptOrder(Order order)
+    {
+        if (ConfirmAction(order, "Accept"))
         {
             order.IsActive = true;
             orderRepository.SetOrderId(order);
@@ -335,10 +370,15 @@ public class OrderManager
 
     private void CancelOrder(Order order)
     {
-        // order.IsActive = false;
-        // order.AssignedTable.IsOccupied = false;
-        orderRepository.RemoveOrder(order);
-        Console.WriteLine("Order cancelled");
+        if (ConfirmAction(order, "Cancel"))
+        {
+            orderRepository.RemoveOrder(order);
+            Console.WriteLine("Order cancelled successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Order cancellation denied.");
+        }
         Console.ReadKey();
     }
 
@@ -369,6 +409,7 @@ public class OrderManager
     {
         Console.WriteLine($"\nOrder ID: {order.Id}");
         Console.WriteLine($"Table ID: {order.AssignedTable.Id}");
+        Console.WriteLine($"Created: {order.CreatedAt:yyyy-MM-dd HH:mm:ss}");
         Console.WriteLine("Items:");
         foreach (var item in order.Items)
         {
@@ -376,5 +417,10 @@ public class OrderManager
         }
         var total = order.Items.Sum(i => i.Item.Price * i.Quantity);
         Console.WriteLine($"Total: {total:C}");
+
+        if (order.ClosedAt != null)
+        {
+            Console.WriteLine($"Closed: {order.ClosedAt: yyyy-MM-dd HH:mm:ss}");
+        }
     }
 }

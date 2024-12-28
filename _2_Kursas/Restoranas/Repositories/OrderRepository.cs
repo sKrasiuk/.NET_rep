@@ -26,6 +26,7 @@ public class OrderRepository
     {
         order.IsActive = false;
         order.AssignedTable.IsOccupied = false;
+        order.ClosedAt = DateTime.Now;
     }
 
     public IEnumerable<Order> GetActiveOrders(Waiter waiter)
@@ -45,8 +46,13 @@ public class OrderRepository
 
     public void RemoveOrder(Order order)
     {
+        if (order.IsIdAssigned)
+        {
+            nextOrderId--;
+        }
         order.IsActive = false;
         order.AssignedTable.IsOccupied = false;
+        order.IsIdAssigned = false;
         activeOrders.Remove(order);
     }
 

@@ -10,11 +10,15 @@ public class Order
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     public bool IsActive { get; set; }
     public bool IsIdAssigned { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? ClosedAt { get; set; }
 
     public Order()
     {
         IsActive = true;
         IsIdAssigned = false;
+        CreatedAt = DateTime.Now;
+        ClosedAt = null;
     }
 
     public void AddItem(MenuItem item, int quantity)
@@ -22,17 +26,20 @@ public class Order
         Items.Add(new OrderItem { Item = item, Quantity = quantity });
     }
 
-    public void RemoveItem(MenuItem item)
+    public void RemoveItem(int index)
     {
-        Items.RemoveAll(i => i.Item == item);
-    }
-
-    public void UodateItemQuantity(MenuItem item, int quantity)
-    {
-        var orderItem = Items.Find(i => i.Item == item);
-        if (orderItem != null)
+        if (index >= 0 && index < Items.Count)
         {
-            orderItem.Quantity = quantity;
+            Items.RemoveAt(index);
         }
     }
+
+    // public void UpdateItemQuantity(MenuItem item, int quantity)
+    // {
+    //     var orderItem = Items.Find(i => i.Item == item);
+    //     if (orderItem != null)
+    //     {
+    //         orderItem.Quantity = quantity;
+    //     }
+    // }
 }
