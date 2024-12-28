@@ -305,8 +305,28 @@ public class OrderManager
             {
                 if (ConfirmAction(orderToClose, "Close"))
                 {
+                    Console.WriteLine("\nBill Generation Options:");
+
+                    Console.Write("Save customer bill to file? (Y/N): ");
+                    bool saveCustomerBill = Console.ReadLine().ToUpper() == "Y";
+
+                    Console.Write("Send customer bill via email? (Y/N): ");
+                    bool emailCustomerBill = Console.ReadLine().ToUpper() == "Y";
+
+                    string customerEmail = BillManager.CustomerEmail;
+
+                    Console.Write("Send restaurant bill via email? (Y/N): ");
+                    bool emailRestaurantBill = Console.ReadLine().ToUpper() == "Y";
+
+
                     orderRepository.CloseOrder(orderToClose);
-                    billManager.GenerateBills(orderToClose);
+                    billManager.GenerateBills(
+                        orderToClose,
+                        saveCustomerBill,
+                        emailCustomerBill,
+                        emailRestaurantBill,
+                        customerEmail
+                        );
                     Console.WriteLine("Order closed successfully and bills generated.");
                 }
                 else

@@ -12,9 +12,10 @@ public class BillRepository
         Directory.CreateDirectory(BillsDirectory);
     }
 
-    public void SaveBill(Bill bill)
+    public void SaveBill(Bill bill, string content)
     {
         string filename = $"{bill.Type}_Bill_{bill.OrderId}_{bill.ClosedAt:yyyyMMdd_HHmmss}.txt";
         bill.FilePath = Path.Combine(BillsDirectory, filename);
+        File.WriteAllText(bill.FilePath, content);
     }
 }
