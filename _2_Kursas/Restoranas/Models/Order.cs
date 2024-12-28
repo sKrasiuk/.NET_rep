@@ -33,13 +33,4 @@ public class Order
             Items.RemoveAt(index);
         }
     }
-
-    // public void UpdateItemQuantity(MenuItem item, int quantity)
-    // {
-    //     var orderItem = Items.Find(i => i.Item == item);
-    //     if (orderItem != null)
-    //     {
-    //         orderItem.Quantity = quantity;
-    //     }
-    // }
 }

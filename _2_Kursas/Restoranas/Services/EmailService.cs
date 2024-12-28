@@ -1,10 +1,11 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using Restoranas.Interfaces;
 
 namespace Restoranas.Services;
 
-public class EmailService
+public class EmailService : IEmailService
 {
     private readonly SmtpClient smtpClient;
     private readonly string fromEmail;

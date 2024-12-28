@@ -38,7 +38,6 @@ public class MenuRepository : IEnumerable<MenuItem>
             {
                 Name = values[0],
                 Price = decimal.Parse(values[1]),
-                // Category = values[2]
             });
         }
         return foods;
@@ -55,7 +54,6 @@ public class MenuRepository : IEnumerable<MenuItem>
             {
                 Name = values[0],
                 Price = decimal.Parse(values[1]),
-                // Category = values[2]
             });
         }
         return drinks;
