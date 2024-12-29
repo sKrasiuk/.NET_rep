@@ -15,7 +15,7 @@ public class OrderRepository
 
     public void SetOrderId(Order order)
     {
-        if (!order.IsIdAssigned)
+        if (!order.IsIdAssigned && order.IsActive)
         {
             order.Id = nextOrderId++;
             order.IsIdAssigned = true;
@@ -50,10 +50,18 @@ public class OrderRepository
         {
             nextOrderId--;
         }
-        order.IsActive = false;
-        order.AssignedTable.IsOccupied = false;
-        order.IsIdAssigned = false;
+
         activeOrders.Remove(order);
+
+        if (order.AssignedTable != null)
+        {
+            order.AssignedTable.IsOccupied = false;
+        }
+
+        order.IsActive = false;
+        order.IsIdAssigned = false;
+        // order.AssignedTable.IsOccupied = false;
+        // activeOrders.Remove(order);
     }
 
     public int GetNextOrderId()

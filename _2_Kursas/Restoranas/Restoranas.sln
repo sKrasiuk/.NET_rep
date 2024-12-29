@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restoranas", "Restoranas.csproj", "{5FB949DB-AF61-4EC7-81BE-74AECEFE1EBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitTests", "..\RestoranasTests\NUnitTests.csproj", "{FCF71F09-6B09-4431-8BC1-F1496C84933B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,14 @@ Global
 		{5FB949DB-AF61-4EC7-81BE-74AECEFE1EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FB949DB-AF61-4EC7-81BE-74AECEFE1EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FB949DB-AF61-4EC7-81BE-74AECEFE1EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{537C7277-B5F6-4F9D-987C-4454507FC725}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537C7277-B5F6-4F9D-987C-4454507FC725}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537C7277-B5F6-4F9D-987C-4454507FC725}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537C7277-B5F6-4F9D-987C-4454507FC725}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF71F09-6B09-4431-8BC1-F1496C84933B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF71F09-6B09-4431-8BC1-F1496C84933B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF71F09-6B09-4431-8BC1-F1496C84933B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF71F09-6B09-4431-8BC1-F1496C84933B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

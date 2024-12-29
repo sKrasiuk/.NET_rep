@@ -2,6 +2,9 @@
 using Restoranas.Models;
 using Restoranas.Repositories;
 using Restoranas.Services;
+using System.Globalization;
+using System.Threading;
+using System.Text;
 
 namespace Restoranas
 {
@@ -9,6 +12,13 @@ namespace Restoranas
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+            var lithuanianCulture = new CultureInfo("lt-LT");
+            Thread.CurrentThread.CurrentCulture = lithuanianCulture;
+            Thread.CurrentThread.CurrentUICulture = lithuanianCulture;
+            CultureInfo.DefaultThreadCurrentCulture = lithuanianCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = lithuanianCulture;
+
             var waitersRepository = new WaitersRepository();
             var menuRepository = new MenuRepository();
             var tablesRepository = new TablesRepository();

@@ -18,7 +18,7 @@ public class LoginService
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Available Waiters:");
+            Console.WriteLine($"Available Waiters:\n");
             foreach (var w in waitersRepository)
             {
                 Console.WriteLine($"{w.Id}. {w.Name}");

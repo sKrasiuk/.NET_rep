@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using Restoranas.Models;
 
 namespace Restoranas.Repositories;
@@ -31,13 +32,14 @@ public class MenuRepository : IEnumerable<MenuItem>
     {
         var lines = File.ReadAllLines(filePathFood);
         var foods = new List<Food>();
+
         foreach (var line in lines)
         {
             var values = line.Split(',');
             foods.Add(new Food
             {
                 Name = values[0],
-                Price = decimal.Parse(values[1]),
+                Price = decimal.Parse(values[1], CultureInfo.InvariantCulture),
             });
         }
         return foods;
@@ -53,7 +55,7 @@ public class MenuRepository : IEnumerable<MenuItem>
             drinks.Add(new Drink
             {
                 Name = values[0],
-                Price = decimal.Parse(values[1]),
+                Price = decimal.Parse(values[1], CultureInfo.InvariantCulture),
             });
         }
         return drinks;

@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Restoranas.Models;
 using Restoranas.Repositories;
+using System.Globalization;
 
 namespace Restoranas.Managers;
 
@@ -27,12 +28,13 @@ public class OrderManager
         while (true)
         {
             Console.Clear();
+            Console.WriteLine($"Waiter: {waiter.Name}\n");
             Console.WriteLine("1. Create Order");
-            Console.WriteLine("2. Add Item to Order");
+            Console.WriteLine("2. Manage Orders");
             Console.WriteLine("3. Close Order");
             Console.WriteLine("4. View Active Orders");
             Console.WriteLine("5. Logout");
-            Console.Write("Select an option: ");
+            Console.Write("\nSelect an option: ");
             var option = Console.ReadLine();
 
             switch (option)
@@ -64,13 +66,13 @@ public class OrderManager
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Available Tables:");
+            Console.WriteLine($"Available Tables:\n");
             foreach (var t in tables)
             {
                 bool isOccupied = orderRepository.IsTableOccupied(t.Id);
                 Console.WriteLine($"{t.Id}. Seats: {t.Seats}, Status: {(isOccupied ? "Occupied" : "Available")}");
             }
-            Console.WriteLine("0. Cancel");
+            Console.WriteLine($"\n0. Cancel");
 
             Console.Write("\nEnter table ID (0 to cancel): ");
             var input = Console.ReadLine();
@@ -105,9 +107,10 @@ public class OrderManager
 
             var order = waiter.CreateOrder(table);
             orderRepository.AddOrder(order);
-            table.IsOccupied = true;
+            // table.IsOccupied = true;
             // orderRepository.SetOrderId(order);
-            Console.WriteLine($"Order created with ID: {order.Id}");
+            // Console.WriteLine($"Order created with ID: {order.Id}");
+            Console.WriteLine($"Order created and awaiting confirmation...");
             ShowMenuAndAddItems(order);
             return;
         }
@@ -198,11 +201,12 @@ public class OrderManager
         var items = menuItems.Where(i => i.Category == category).ToList();
 
         Console.WriteLine($"\n{category} items:");
-        for (int i = 0; i < items.Count; i++)
+        foreach (var item in items.Select((value, index) => new { value, index }))
         {
-            Console.WriteLine($"{i + 1}. {items[i].Name} - {items[i].Price:C}");
+            var formattedPrice = item.value.Price.ToString("C", CultureInfo.CurrentCulture);
+            Console.WriteLine($"{item.index + 1}. {item.value.Name} - {formattedPrice}");
         }
-        Console.WriteLine("0. Back to categories");
+        Console.WriteLine($"\n0. Back to categories");
 
         Console.Write("\nSelect item number: ");
         var choice = Console.ReadLine();
@@ -216,7 +220,8 @@ public class OrderManager
             if (int.TryParse(Console.ReadLine(), out int quantity))
             {
                 order.AddItem(selectedItem, quantity);
-                Console.WriteLine("Item added to order.");
+                Console.WriteLine($"Item added to order. Total: {selectedItem.Price * quantity:C}");
+                // Console.WriteLine("Item added to order.");
                 Console.ReadKey();
             }
         }
@@ -370,7 +375,9 @@ public class OrderManager
         ShowOrderSummary(order);
 
         Console.WriteLine($"\nDo you want to {action.ToLower()} this order? (Y/N)");
-        return Console.ReadLine().ToUpper() == "Y";
+        var response = Console.ReadLine();
+        return response != null && string.Equals(response, "Y", StringComparison.OrdinalIgnoreCase);
+        // return Console.ReadLine().ToUpper() == "Y";
     }
 
     private bool AcceptOrder(Order order)
@@ -379,27 +386,43 @@ public class OrderManager
         {
             order.IsActive = true;
             orderRepository.SetOrderId(order);
+            order.AssignedTable.IsOccupied = true;
             Console.WriteLine("Order accepted!");
             Console.ReadKey();
             return true;
         }
-        Console.WriteLine("Acception denied.");
-        Console.ReadKey();
+        // Console.WriteLine("Acception denied.");
+        // Console.ReadKey();
+        CancelOrder(order);
         return false;
     }
 
     private void CancelOrder(Order order)
     {
-        if (ConfirmAction(order, "Cancel"))
+        if (order.IsIdAssigned)
         {
-            orderRepository.RemoveOrder(order);
-            Console.WriteLine("Order cancelled successfully.");
+            if (!ConfirmAction(order, "Cancel"))
+            {
+                Console.WriteLine("Order cancellation denied.");
+                Console.ReadKey();
+                return;
+            }
         }
-        else
-        {
-            Console.WriteLine("Order cancellation denied.");
-        }
+
+        order.AssignedTable.IsOccupied = false;
+        orderRepository.RemoveOrder(order);
+        Console.WriteLine("Order cancelled successfully.");
         Console.ReadKey();
+        // if (ConfirmAction(order, "Cancel"))
+        // {
+        //     orderRepository.RemoveOrder(order);
+        //     Console.WriteLine("Order cancelled successfully.");
+        // }
+        // else
+        // {
+        //     Console.WriteLine("Order cancellation denied.");
+        // }
+        // Console.ReadKey();
     }
 
     private void ViewActiveOrders(Waiter waiter)
