@@ -15,7 +15,7 @@ public class EmailService : IEmailService
         smtpClient = new SmtpClient("smtp.office365.com")
         {
             Port = 587,
-            Credentials = new NetworkCredential("sergej.krasiukov@codeacademylt.onmicrosoft.com", "CodeAcademy7321SKA"),
+            Credentials = new NetworkCredential("sergej.krasiukov@codeacademylt.onmicrosoft.com", ""),
             EnableSsl = true
         };
         fromEmail = "sergej.krasiukov@codeacademylt.onmicrosoft.com";

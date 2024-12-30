@@ -60,8 +60,6 @@ public class OrderRepository
 
         order.IsActive = false;
         order.IsIdAssigned = false;
-        // order.AssignedTable.IsOccupied = false;
-        // activeOrders.Remove(order);
     }
 
     public int GetNextOrderId()

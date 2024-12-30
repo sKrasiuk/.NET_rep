@@ -107,9 +107,6 @@ public class OrderManager
 
             var order = waiter.CreateOrder(table);
             orderRepository.AddOrder(order);
-            // table.IsOccupied = true;
-            // orderRepository.SetOrderId(order);
-            // Console.WriteLine($"Order created with ID: {order.Id}");
             Console.WriteLine($"Order created and awaiting confirmation...");
             ShowMenuAndAddItems(order);
             return;
@@ -200,11 +197,10 @@ public class OrderManager
         Console.Clear();
         var items = menuItems.Where(i => i.Category == category).ToList();
 
-        Console.WriteLine($"\n{category} items:");
-        foreach (var item in items.Select((value, index) => new { value, index }))
+        Console.WriteLine($"{category} items:\n");
+        for (int i = 0; i < items.Count; i++)
         {
-            var formattedPrice = item.value.Price.ToString("C", CultureInfo.CurrentCulture);
-            Console.WriteLine($"{item.index + 1}. {item.value.Name} - {formattedPrice}");
+            Console.WriteLine($"{i + 1}. {items[i].Name} - {items[i].Price:C}");
         }
         Console.WriteLine($"\n0. Back to categories");
 
@@ -221,7 +217,6 @@ public class OrderManager
             {
                 order.AddItem(selectedItem, quantity);
                 Console.WriteLine($"Item added to order. Total: {selectedItem.Price * quantity:C}");
-                // Console.WriteLine("Item added to order.");
                 Console.ReadKey();
             }
         }
@@ -377,7 +372,6 @@ public class OrderManager
         Console.WriteLine($"\nDo you want to {action.ToLower()} this order? (Y/N)");
         var response = Console.ReadLine();
         return response != null && string.Equals(response, "Y", StringComparison.OrdinalIgnoreCase);
-        // return Console.ReadLine().ToUpper() == "Y";
     }
 
     private bool AcceptOrder(Order order)
@@ -391,8 +385,6 @@ public class OrderManager
             Console.ReadKey();
             return true;
         }
-        // Console.WriteLine("Acception denied.");
-        // Console.ReadKey();
         CancelOrder(order);
         return false;
     }
@@ -413,16 +405,6 @@ public class OrderManager
         orderRepository.RemoveOrder(order);
         Console.WriteLine("Order cancelled successfully.");
         Console.ReadKey();
-        // if (ConfirmAction(order, "Cancel"))
-        // {
-        //     orderRepository.RemoveOrder(order);
-        //     Console.WriteLine("Order cancelled successfully.");
-        // }
-        // else
-        // {
-        //     Console.WriteLine("Order cancellation denied.");
-        // }
-        // Console.ReadKey();
     }
 
     private void ViewActiveOrders(Waiter waiter)

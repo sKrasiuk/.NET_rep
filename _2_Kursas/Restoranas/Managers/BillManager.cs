@@ -23,7 +23,7 @@ public class BillManager
         bool saveCustomerBill,
         bool emailCustomerBill,
         bool emailRestaurantBill,
-        string customerEmail = null
+        string? customerEmail = null
         )
     {
         var restaurantBill = GenerateRestaurantBill(order);
