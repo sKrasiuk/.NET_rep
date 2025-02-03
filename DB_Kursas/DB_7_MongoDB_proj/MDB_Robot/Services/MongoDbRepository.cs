@@ -9,7 +9,7 @@ public class MongoDbRepository
 {
     private readonly IMongoCollection<Robot> _robots;
 
-    public MongoDbRepository(string connectionString = "mongodb+srv://TestDB:TestDB123@cluster0.znu2h.mongodb.net/", string databaseName = "RobotDb")
+    public MongoDbRepository(string connectionString = "", string databaseName = "")
     {
         var client = new MongoClient(connectionString);
         var database = client.GetDatabase(databaseName);
