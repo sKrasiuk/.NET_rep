@@ -1,6 +1,7 @@
 using System;
 using DB_Atsiskaitymas.Models;
 using DB_Atsiskaitymas.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace DB_Atsiskaitymas.Repositories;
 
@@ -82,5 +83,35 @@ public class LecturesRepository : IDisposable
     public List<Lecture> GetAllLectures()
     {
         return _dbContext.Lectures.ToList();
+    }
+
+    public List<Lecture> GetLecturesByDepartment(int departmentId)
+    {
+        var department = _dbContext.Departments
+            .Include(x => x.Lectures)
+            .FirstOrDefault(x => x.Id == departmentId);
+
+        if (department == null)
+        {
+            Console.WriteLine("Department not found.");
+            return new List<Lecture>();
+        }
+
+        return department.Lectures.ToList();
+    }
+
+    public List<Lecture> GetLecturesByStudent(int studentId)
+    {
+        var student = _dbContext.Students
+            .Include(x => x.Lectures)
+            .FirstOrDefault(x => x.Id == studentId);
+
+        if (student == null)
+        {
+            Console.WriteLine("Student not found.");
+            return new List<Lecture>();
+        }
+
+        return student.Lectures.ToList();
     }
 }

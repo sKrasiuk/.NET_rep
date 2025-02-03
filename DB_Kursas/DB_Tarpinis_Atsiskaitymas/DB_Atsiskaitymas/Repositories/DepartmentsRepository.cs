@@ -57,8 +57,8 @@ public class DepartmentsRepository : IDisposable
         return _dbContext.Departments.ToList();
     }
 
-    public Department? GetDepartmentById(int depId)
+    public Department? GetDepartmentById(int departmentId)
     {
-        return _dbContext.Departments.FirstOrDefault(x => x.Id == depId);
+        return _dbContext.Departments.FirstOrDefault(x => x.Id == departmentId);
     }
 }

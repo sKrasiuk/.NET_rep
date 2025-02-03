@@ -144,4 +144,19 @@ public class StudentsRepository : IDisposable
     {
         return _dbContext.Students.ToList();
     }
+
+    public List<Student> GetStudentsByDepartment(int departmentId)
+    {
+        var department = _dbContext.Departments
+            .Include(x => x.Students)
+            .FirstOrDefault(x => x.Id == departmentId);
+        
+        if (department == null)
+        {
+            Console.WriteLine("Department not found.");
+            return new List<Student>();
+        }
+
+        return department.Students.ToList();
+    }
 }
