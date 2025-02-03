@@ -1,0 +1,6 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveWorkspaceFilesOnly": true,
+    "files.autoSaveDelay": 1500,
+    "workbench.editor.tabSizing": "shrink"
+}
