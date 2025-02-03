@@ -1,0 +1,7 @@
+{
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 120,
+    "workbench.editor.wrapTabs": true,
+    "notebook.output.wordWrap": true,
+    "chat.editor.wordWrap": "on"
+}

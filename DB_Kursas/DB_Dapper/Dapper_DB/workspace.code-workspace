@@ -1,0 +1,14 @@
+{
+	"folders": [],
+	"settings": {
+		"files.autoSave": "afterDelay",
+		"files.autoSaveDelay": 2000,
+		"editor.fontSize": 16,
+		"launch": {
+
+			"configurations": [],
+			"compounds": []
+		}
+	},
+	
+}
