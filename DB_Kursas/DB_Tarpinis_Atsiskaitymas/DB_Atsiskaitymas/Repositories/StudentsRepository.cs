@@ -142,7 +142,7 @@ public class StudentsRepository : IDisposable
 
     public List<Student> GetAllSudents()
     {
-        return _dbContext.Students.ToList();
+        return _dbContext.Students.Include(x => x.Department).ToList();
     }
 
     public List<Student> GetStudentsByDepartment(int departmentId)
@@ -150,7 +150,7 @@ public class StudentsRepository : IDisposable
         var department = _dbContext.Departments
             .Include(x => x.Students)
             .FirstOrDefault(x => x.Id == departmentId);
-        
+
         if (department == null)
         {
             Console.WriteLine("Department not found.");
@@ -158,5 +158,24 @@ public class StudentsRepository : IDisposable
         }
 
         return department.Students.ToList();
+    }
+
+    public void ClearDependencies(string name, string surname)
+    {
+        var student = _dbContext.Students
+            .Include(s => s.Department)
+            .Include(s => s.Lectures)
+            .FirstOrDefault(s => s.Name == name && s.Surname == surname);
+
+        if (student == null)
+        {
+            Console.WriteLine("Student not found.");
+            return;
+        }
+
+        student.Department = null;
+        student.Lectures.Clear();
+
+        _dbContext.SaveChanges();
     }
 }

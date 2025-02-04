@@ -1,6 +1,5 @@
 using System;
 using DB_Atsiskaitymas.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace DB_Atsiskaitymas.Managers;
 
@@ -34,8 +33,7 @@ public class AppManager
             Console.WriteLine("0: Exit");
             Console.Write("\nSelect an option: ");
 
-            string choice = PromptInput();
-            switch (choice)
+            switch (PromptInput())
             {
                 case "1":
                     CreateDepartment();
@@ -46,8 +44,7 @@ public class AppManager
                     Console.WriteLine("2: Manage Lectures");
                     Console.Write("\nSelect a lecture number (0: Cancel): ");
 
-                    choice = PromptInput();
-                    switch (choice)
+                    switch (PromptInput())
                     {
                         case "1":
                             CreateLecture();
@@ -68,8 +65,7 @@ public class AppManager
                     Console.WriteLine("2: Manage Students");
                     Console.Write("\nSelect a student number (0: Cancel): ");
 
-                    choice = PromptInput();
-                    switch (choice)
+                    switch (PromptInput())
                     {
                         case "1":
                             CreateStudent();
@@ -94,8 +90,7 @@ public class AppManager
                     Console.WriteLine("3: Print Lectures by Student");
                     Console.Write("\nSelect an option number (0: Cancel): ");
 
-                    choice = PromptInput();
-                    switch (choice)
+                    switch (PromptInput())
                     {
                         case "1":
                             PrintStudentsByDepartment();
@@ -120,8 +115,7 @@ public class AppManager
                     Console.WriteLine("3: Delete Department");
                     Console.Write("\nSelect an option number (0: Cancel): ");
 
-                    choice = PromptInput();
-                    switch (choice)
+                    switch (PromptInput())
                     {
                         case "1":
                             DeleteStudent();
@@ -233,19 +227,21 @@ public class AppManager
     private void ChangeStudentDepartment()
     {
         Console.Clear();
+        Console.WriteLine("=== Change Student Department ===\n");
 
-        Console.WriteLine("=== Move Student to Another Department ===\n");
         var students = _studentsRepo.GetAllSudents();
-        if (students.Count == 0)
+        if (!students.Any())
         {
             Console.WriteLine("No students found. Please create a student first.");
             return;
         }
 
+        Console.WriteLine("Available Students:\n");
         for (int i = 0; i < students.Count; i++)
         {
-            string departmentName = _departmentsRepo.GetDepartmentById((int)students[i].DepartmentId)?.Name ?? "Not related to any Department";
-            Console.WriteLine($"{i + 1}: {students[i].Name} {students[i].Surname} - department: {departmentName}");
+            var student = students[i];
+            Console.WriteLine($"{i + 1}: {student.Name} {student.Surname}");
+            Console.WriteLine($"\tCurrent Department: {student.Department?.Name ?? "None"}");
         }
         Console.Write("\nSelect a student number (0: Cancel): ");
 
@@ -262,16 +258,41 @@ public class AppManager
         string sName = students[studIndex - 1].Name;
         string sSurname = students[studIndex - 1].Surname;
 
-        // Console.Clear();
+        Console.Clear();
+        Console.WriteLine($"=== Managing Student: {sName} {sSurname} ===\n");
+        Console.WriteLine("1: Change department (and inherit lectures)");
+        Console.WriteLine("2: Clear all dependencies (department and lectures)");
+        Console.WriteLine("0: Cancel");
 
+        Console.Write("\nSelect an option: ");
+        string choice = PromptInput();
+
+        switch (choice)
+        {
+            case "1":
+                ChangeDepartment(sName, sSurname);
+                break;
+            case "2":
+                ClearStudentDependencies(sName, sSurname);
+                break;
+            case "0":
+                return;
+            default:
+                Console.WriteLine("Invalid option selected.");
+                break;
+        }
+    }
+
+    private void ChangeDepartment(string studentName, string studentSurname)
+    {
         var departments = _departmentsRepo.GetAllDepartments();
-        if (departments.Count == 0)
+        if (!departments.Any())
         {
             Console.WriteLine("No departments available. Create one first.");
             return;
         }
 
-        Console.WriteLine("Available Departments:\n");
+        Console.WriteLine("\nAvailable Departments:");
         for (int i = 0; i < departments.Count; i++)
         {
             Console.WriteLine($"{i + 1}: {departments[i].Name}");
@@ -280,7 +301,7 @@ public class AppManager
         Console.Write("\nSelect a department number (0: Cancel): ");
         if (!int.TryParse(PromptInput(), out int depIndex) || depIndex < 0 || depIndex > departments.Count)
         {
-            Console.WriteLine("Invalid department selection. Returning to previous menu.");
+            Console.WriteLine("Invalid department selection.");
             return;
         }
         if (depIndex == 0)
@@ -289,9 +310,20 @@ public class AppManager
         }
 
         string depName = departments[depIndex - 1].Name;
-        _studentsRepo.SetDepartment(sName, sSurname, depName, assignLectures: true);
+        _studentsRepo.SetDepartment(studentName, studentSurname, depName, assignLectures: true);
+    }
 
-        Console.WriteLine($"\nStudent: {sName} {sSurname} - successfully moved to department: {depName}.");
+    private void ClearStudentDependencies(string studentName, string studentSurname)
+    {
+        Console.Write($"\nAre you sure you want to clear all dependencies for student {studentName} {studentSurname}? (Y/N): ");
+        if (PromptInput().ToLower() != "y")
+        {
+            Console.WriteLine("Operation cancelled.");
+            return;
+        }
+
+        _studentsRepo.ClearDependencies(studentName, studentSurname);
+        Console.WriteLine($"\nAll dependencies cleared for student: {studentName} {studentSurname}");
     }
 
     private void CreateLecture()
@@ -302,7 +334,6 @@ public class AppManager
         string lectureName = PromptInput();
         if (lectureName == "0")
         {
-            Console.WriteLine($"\nLecture {lectureName} - Cancelled.");
             return;
         }
 
@@ -359,7 +390,7 @@ public class AppManager
         }
     }
 
-    private void ManageLecture() // TO COMPLETE
+    private void ManageLecture()
     {
         Console.Clear();
         Console.WriteLine("=== Manage Lecture Departments ===\n");
