@@ -1,5 +1,6 @@
 using System;
 using DB_Atsiskaitymas.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DB_Atsiskaitymas.Managers;
 
@@ -25,9 +26,9 @@ public class AppManager
 
             Console.WriteLine("=== University Management System ===\n");
             Console.WriteLine("1: Create Department");
-            Console.WriteLine("2: Create / Update Lecture (requires Department)");
-            Console.WriteLine("3: Create / Update Student (requires Department)");
-            Console.WriteLine("4: Refresh Database (reqiured after new Lecture addition)");
+            Console.WriteLine("2: Create / Manage Lecture (requires Department)");
+            Console.WriteLine("3: Create / Manage Student (requires Department)");
+            Console.WriteLine("4: Refresh Database (reqiured after Lecture addition / alteration)");
             Console.WriteLine("5: Access Records");
             Console.WriteLine("6: Delete entities");
             Console.WriteLine("0: Exit");
@@ -42,7 +43,7 @@ public class AppManager
                 case "2":
                     Console.Clear();
                     Console.WriteLine("1: Create Lecture (requires Department)");
-                    Console.WriteLine("2: Update Lecture");
+                    Console.WriteLine("2: Manage Lectures");
                     Console.Write("\nSelect a lecture number (0: Cancel): ");
 
                     choice = PromptInput();
@@ -52,7 +53,7 @@ public class AppManager
                             CreateLecture();
                             break;
                         case "2":
-                            // ManageLectureDepartments();
+                            ManageLecture();
                             break;
                         case "0":
                             break;
@@ -64,7 +65,7 @@ public class AppManager
                 case "3":
                     Console.Clear();
                     Console.WriteLine("1: Create Student (requires Department)");
-                    Console.WriteLine("2: Update Student");
+                    Console.WriteLine("2: Manage Students");
                     Console.Write("\nSelect a student number (0: Cancel): ");
 
                     choice = PromptInput();
@@ -194,7 +195,13 @@ public class AppManager
         Console.Write("Enter Student Surname: ");
         string surname = PromptInput();
 
-        _studentsRepo.AddStudent(name, surname);
+        Console.Write($"\nCreate student {name} {surname}? (Y/N): ");
+        string confirm = PromptInput().ToLower();
+        if (!confirm.Equals("y"))
+        {
+            Console.WriteLine($"\nStudent {name} {surname} - Cancelled.");
+            return;
+        }
 
         var departments = _departmentsRepo.GetAllDepartments();
         if (!departments.Any())
@@ -202,6 +209,7 @@ public class AppManager
             Console.WriteLine("\nNo departments exist yet. Create one before assigning.");
             return;
         }
+        _studentsRepo.AddStudent(name, surname);
 
         Console.WriteLine("\nAvailable Departments:");
         for (int i = 0; i < departments.Count; i++)
@@ -236,7 +244,7 @@ public class AppManager
 
         for (int i = 0; i < students.Count; i++)
         {
-            string departmentName = _departmentsRepo.GetDepartmentById((int)students[i].DepartmentId)?.Name ?? "Unknown Department";
+            string departmentName = _departmentsRepo.GetDepartmentById((int)students[i].DepartmentId)?.Name ?? "Not related to any Department";
             Console.WriteLine($"{i + 1}: {students[i].Name} {students[i].Surname} - department: {departmentName}");
         }
         Console.Write("\nSelect a student number (0: Cancel): ");
@@ -290,8 +298,13 @@ public class AppManager
     {
         Console.Clear();
 
-        Console.Write("Enter Lecture Name: ");
+        Console.Write("Enter Lecture Name (0: Cancel): ");
         string lectureName = PromptInput();
+        if (lectureName == "0")
+        {
+            Console.WriteLine($"\nLecture {lectureName} - Cancelled.");
+            return;
+        }
 
         var departments = _departmentsRepo.GetAllDepartments();
         if (!departments.Any())
@@ -342,6 +355,157 @@ public class AppManager
             else
             {
                 Console.Write("\nInvalid input. Please enter a department number or '0': ");
+            }
+        }
+    }
+
+    private void ManageLecture() // TO COMPLETE
+    {
+        Console.Clear();
+        Console.WriteLine("=== Manage Lecture Departments ===\n");
+
+        var lectures = _lecturesRepo.GetAllLectures();
+        if (!lectures.Any())
+        {
+            Console.WriteLine("No lectures exist yet. Create a lecture first.");
+            return;
+        }
+
+        Console.WriteLine("Available Lectures:\n");
+        for (int i = 0; i < lectures.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}: {lectures[i].Name}");
+
+            if (!lectures[i].Departments.Any())
+            {
+                Console.WriteLine("\tNot related to any Department.");
+            }
+            else
+            {
+                foreach (var department in lectures[i].Departments)
+                {
+                    Console.WriteLine($"\tDepartment: {department.Name}");
+                }
+            }
+        }
+
+        Console.Write("\nSelect a lecture number (0: Back): ");
+        if (!int.TryParse(PromptInput(), out int lecIndex) ||
+            lecIndex < 1 || lecIndex > lectures.Count)
+        {
+            if (lecIndex != 0)
+            {
+                Console.WriteLine("Invalid lecture selection.");
+            }
+            return;
+        }
+
+        string lectureName = lectures[lecIndex - 1].Name;
+
+        Console.Clear();
+        Console.WriteLine($"=== Managing Lecture: {lectureName} ===\n");
+        Console.WriteLine("1: Manage existing department relations");
+        Console.WriteLine("2: Reset and reassign all department relations");
+        Console.WriteLine("0: Back");
+        Console.Write("\nSelect an option: ");
+
+        switch (PromptInput())
+        {
+            case "1":
+                ManageLectureDepartments(lectureName);
+                break;
+            case "2":
+                ResetAndReassignDepartments(lectureName);
+                break;
+            case "0":
+                return;
+            default:
+                Console.WriteLine("Invalid option selected.");
+                break;
+        }
+    }
+
+    private void ManageLectureDepartments(string lectureName)
+    {
+        var departments = _departmentsRepo.GetAllDepartments();
+        if (!departments.Any())
+        {
+            Console.WriteLine("\nNo departments exist yet. Create one before assigning.");
+            return;
+        }
+
+        Console.WriteLine("\nAvailable Departments:\n");
+        for (int i = 0; i < departments.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}: {departments[i].Name}");
+        }
+
+        while (true)
+        {
+            Console.Write("\nSelect a department number (0: Finish): ");
+            string input = PromptInput();
+
+            if (input == "0")
+            {
+                break;
+            }
+
+            if (int.TryParse(input, out int depIndex) &&
+                depIndex >= 1 && depIndex <= departments.Count)
+            {
+                string depName = departments[depIndex - 1].Name;
+                _lecturesRepo.SetDepartment(lectureName, depName);
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid department number. Try again.");
+            }
+        }
+    }
+
+    private void ResetAndReassignDepartments(string lectureName)
+    {
+        Console.Write($"\nAre you sure you want to reset all department relations for lecture {lectureName}? (Y/N): ");
+        if (PromptInput().ToLower() != "y")
+        {
+            Console.WriteLine("Operation cancelled.");
+            return;
+        }
+
+        var departments = _departmentsRepo.GetAllDepartments();
+        if (!departments.Any())
+        {
+            Console.WriteLine("\nNo departments exist yet. Create one before assigning.");
+            return;
+        }
+
+        _lecturesRepo.ClearDepartmentRelations(lectureName);
+
+        Console.WriteLine("\nAvailable Departments:");
+        for (int i = 0; i < departments.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}: {departments[i].Name}");
+        }
+
+        while (true)
+        {
+            Console.Write("\nSelect department numbers to assign (0: Finish): ");
+            string input = PromptInput();
+
+            if (input == "0")
+            {
+                break;
+            }
+
+            if (int.TryParse(input, out int depIndex) &&
+                depIndex >= 1 && depIndex <= departments.Count)
+            {
+                string depName = departments[depIndex - 1].Name;
+                _lecturesRepo.SetDepartment(lectureName, depName);
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid department number. Try again.");
             }
         }
     }

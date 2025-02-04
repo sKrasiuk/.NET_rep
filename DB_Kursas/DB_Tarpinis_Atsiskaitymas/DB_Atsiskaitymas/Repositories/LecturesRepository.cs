@@ -82,7 +82,7 @@ public class LecturesRepository : IDisposable
 
     public List<Lecture> GetAllLectures()
     {
-        return _dbContext.Lectures.ToList();
+        return _dbContext.Lectures.Include(x => x.Departments).ToList();
     }
 
     public List<Lecture> GetLecturesByDepartment(int departmentId)
@@ -113,5 +113,22 @@ public class LecturesRepository : IDisposable
         }
 
         return student.Lectures.ToList();
+    }
+
+    public void ClearDepartmentRelations(string lectureName)
+    {
+        var lecture = _dbContext.Lectures
+            .Include(x => x.Departments)
+            .FirstOrDefault(x => x.Name == lectureName);
+
+        if (lecture == null)
+        {
+            Console.WriteLine("\nLecture not found.");
+            return;
+        }
+
+        lecture.Departments.Clear();
+        _dbContext.SaveChanges();
+        Console.WriteLine($"\nAll department relations cleared for lecture: {lectureName}");
     }
 }
