@@ -1,6 +1,8 @@
 using System;
+using System.Data.Common;
 using DB_Atsiskaitymas.Models;
 using DB_Atsiskaitymas.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace DB_Atsiskaitymas.Repositories;
 
@@ -34,21 +36,31 @@ public class DepartmentsRepository : IDisposable
 
     public void RemoveDepartment(string name)
     {
-        if (!_dbContext.Departments.Any(x => x.Name == name))
+        var department = _dbContext.Departments
+            .Include(x => x.Lectures)
+            .Include(x => x.Students)
+            .FirstOrDefault(x => x.Name == name);
+        if (department == null)
         {
             Console.WriteLine("\nNo such department exists.");
             return;
         }
 
+        if (department.Lectures.Any() || department.Students.Any())
+        {
+            Console.WriteLine($"Cannot delete depatment {name} - it has existing lectures or students!");
+            return;
+        }
+
         try
         {
-            _dbContext.Departments.Remove(_dbContext.Departments.Single(x => x.Name == name));
+            _dbContext.Departments.Remove(department);
             _dbContext.SaveChanges();
             Console.WriteLine($"\nDepartment {name} removed.");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            Console.WriteLine($"Unable to delete the depatment: {name} - due to dependancies!");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 

@@ -116,7 +116,7 @@ public class LecturesRepository : IDisposable
     }
 
     public void ClearDepartmentRelations(string lectureName)
-    {
+    {2
         var lecture = _dbContext.Lectures
             .Include(x => x.Departments)
             .FirstOrDefault(x => x.Name == lectureName);
@@ -127,8 +127,15 @@ public class LecturesRepository : IDisposable
             return;
         }
 
-        lecture.Departments.Clear();
-        _dbContext.SaveChanges();
-        Console.WriteLine($"\nAll department relations cleared for lecture: {lectureName}");
+        try
+        {
+            lecture.Departments.Clear();
+            _dbContext.SaveChanges();
+            Console.WriteLine($"\nAll department relations cleared for lecture: {lectureName}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }
