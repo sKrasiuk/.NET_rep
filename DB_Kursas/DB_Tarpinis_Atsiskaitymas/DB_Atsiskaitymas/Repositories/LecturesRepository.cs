@@ -116,7 +116,7 @@ public class LecturesRepository : IDisposable
     }
 
     public void ClearDepartmentRelations(string lectureName)
-    {2
+    {
         var lecture = _dbContext.Lectures
             .Include(x => x.Departments)
             .FirstOrDefault(x => x.Name == lectureName);
